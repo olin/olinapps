@@ -1,3 +1,4 @@
 Flask==0.9
 py-bcrypt
--e git://github.com/ohack/python-oliners.git#egg=oliners
+requests
+pymongo
