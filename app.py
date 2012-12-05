@@ -126,6 +126,9 @@ def route_login():
 
   generate_session(user)
 
+  if request.args.get('callback') and 'external' in request.args:
+    return redirect(request.args.get('callback') + '?sessionid=' + session['sessionid'])
+
   return jsonify(message="Logged in.", sessionid=user['sessionid'])
 
 @app.route('/logout', methods=['POST'])
