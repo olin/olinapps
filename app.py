@@ -91,7 +91,7 @@ def route_reset():
     # Redirect
     return redirect('/')
 
-@app.route('/login', methods=['POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def route_login():
   # Normalize username.
   username = request.form.get('username')
@@ -131,7 +131,7 @@ def route_login():
 
   return jsonify(message="Logged in.", sessionid=user['sessionid'])
 
-@app.route('/logout', methods=['POST'])
+@app.route('/logout', methods=['GET', 'POST'])
 def route_logout():
   if 'sessionid' not in session:
     return jsonify(message="You are not logged in.")
