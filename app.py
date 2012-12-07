@@ -136,7 +136,7 @@ def route_index():
 @app.route('/external')
 def route_external():
   user = get_session_user()
-  if user:
+  if True:
     return render_template('external.html',
       external=request.args.get('callback'),
       sessionid=session['sessionid'])
@@ -148,11 +148,16 @@ def route_login():
   # Normalize username.
   username = request.form.get('email')
   if not username:
-    return jsonify(message="No such user or invalid password.")
+    return render_template('login.html',
+      external=request.args.get('external'),
+      message="Please enter an email address.")
 
   # Check for canonical emails.
   if email_domain_part(username) not in ['olin.edu', 'students.olin.edu', 'alumni.olin.edu']:
-    return jsonify(message='Invalid email address.')
+    return render_template('login.html',
+      external=request.args.get('external'),
+      message="Not a valid olin.edu email address.",
+      email=username)
 
   # Lookup user.
   user = ensure_user(username)
@@ -162,7 +167,10 @@ def route_login():
     reset_password(user)
     return render_template('reset_sent.html')
   if not match_password(request.form.get('password'), user['password']):
-    return jsonify(message="No such user or invalid password.")
+    return render_template('login.html',
+      external=request.args.get('external'),
+      message="No such user or invalid password.",
+      email=username)
 
   generate_session(user)
 

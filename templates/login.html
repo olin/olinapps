@@ -5,12 +5,16 @@
   <h2>Login to Olin Apps</h2>
   <p class="muted">Log in with your Olin email address ending in <i>@students.olin.edu</i>, <i>@alumni.olin.edu</i>, or <i>@olin.edu</i>. Make sure to use your full email, not an alias.</p>
 
+  {% if message %}
+  <div class="alert alert-error">{{ message }}</div>
+  {% endif %}
+
   <form action="login{% if external %}?external={{ external }}{% endif %}" method="post"
   class="form-horizontal">
     <div class="control-group">
       <label class="control-label" for="inputEmail">Email:</label>
       <div class="controls">
-        <input name="email" type="text" id="inputEmail" placeholder="full.name@students.olin.edu" class="input-xlarge">
+        <input name="email" type="text" id="inputEmail" placeholder="full.name@students.olin.edu" class="input-xlarge" value="{{ email }}">
         <script>document.getElementById('inputEmail').focus()</script>
       </div>
     </div>
