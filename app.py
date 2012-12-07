@@ -117,6 +117,7 @@ def route_reset():
   password = request.form.get('password', '')
   if len(password) < 8:
     return render_template('reset_pass.html',
+      user=user,
       message="Password must be at least eight characters long.")
 
   # Update user
