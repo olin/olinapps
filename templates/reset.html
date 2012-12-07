@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block body %}
+  <h2>Reset your password</h2>
+
+  <form method="post" class="form-horizontal">
+    <div class="control-group">
+      <label class="control-label" for="inputEmail">Email:</label>
+      <div class="controls">
+        <input name="email" type="text" id="inputEmail" placeholder="full.name@students.olin.edu" class="input-xlarge">
+        <script>document.getElementById('inputEmail').focus()</script>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-success">Submit Reset Email</button>
+    </div>
+  </form>
+{% endblock %}

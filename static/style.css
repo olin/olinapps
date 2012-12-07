@@ -1,0 +1,11 @@
+.container-fluid { max-width: 600px; margin-left: auto; margin-right: auto;}
+body { background: #ddd; padding-top: 30px;}
+
+h1 { margin: 0 0 10px; font-size: 26px; font-weight: normal; }
+h1 a { color: #943; }
+h2 { font-size: 22px; }
+h3 { font-size: 18px; }
+hr { border-top-color: #ccc; }
+
+#body { border: 1px solid #999; background: #eee; box-shadow: #666 2px 2px 2px;
+padding: 15px 30px;}

@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<h2>Password reset</h2>
+<p>Set new password for the account <code>{{ user._id }}</code>.</p>
+
+<form method="post"
+class="form-horizontal">
+  <div class="control-group">
+    <label class="control-label" for="inputPassword">Password:</label>
+    <div class="controls">
+      <input name="username" type="password" id="inputPassword" class="input-xlarge">
+      <script>document.getElementById('inputPassword').focus()</script>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="inputPassword2">Confirm password:</label>
+    <div class="controls">
+      <input name="password" type="password" id="inputPassword2" class="input-xlarge"> 
+    </div>
+  </div>
+  <div class="form-actions">
+    <button class="btn btn-success">Change Password</button>
+  </div>
+  
+</form>
+{% endblock %}

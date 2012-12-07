@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+{% block body %}
+  <h1>External Auth</h1>
+  <p>Click to sign in with {{ external }}.</p>
+  <form action="{{ external }}">
+    <input name="sessionid" value="{{ sessionid }}" type="hidden">
+    <button>Sign in</button>
+  </form>
+  <form action="{{ external }}">
+    <button>Go Back</button>
+  </form>
+{% endblock %}
