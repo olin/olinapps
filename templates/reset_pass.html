@@ -4,6 +4,10 @@
 <h2>Password reset</h2>
 <p>Set new password for the account <code>{{ user._id }}</code>.</p>
 
+{% if message %}
+<div class="alert alert-error">{{ message }}</div>
+{% endif %}
+
 <form method="post"
 class="form-horizontal">
   <div class="control-group">

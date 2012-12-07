@@ -116,7 +116,8 @@ def route_reset():
 
   password = request.form.get('password', '')
   if len(password) < 8:
-    return jsonify(message="Password must be >= 8 characters long.")
+    return render_template('reset_pass.html',
+      message="Password must be at least eight characters long.")
 
   # Update user
   user['password'] = hash_password(password)
