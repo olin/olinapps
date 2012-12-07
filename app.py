@@ -93,10 +93,10 @@ def generate_session(user):
   session['sessionid'] = user['sessionid']
 
 def get_session_user():
-  if 'sessionid' not in session:
+  if 'sessionid' not in session or request.args.get('sessionid'):
     return None
   return db.users.find_one({
-    "sessionid": session['sessionid']
+    "sessionid": session.get('sessionid') or request.args.get('sessionid')
     })
 
 @app.route('/reset', methods=['GET', 'POST'])
