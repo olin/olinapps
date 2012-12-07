@@ -135,6 +135,18 @@ def route_index():
     external=request.args.get('external'),
     user=user)
 
+@app.route('/me')
+def route_me():
+  user = get_session_user()
+  if user:
+    return jsonify(error=False, user={
+      "domain": user['domain'],
+      "id": user['_id'],
+      "created": user['created']
+      })
+  else:
+    return jsonify(error=True)
+
 @app.route('/external')
 def route_external():
   user = get_session_user()
