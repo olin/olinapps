@@ -63,7 +63,7 @@ def reset_password(user):
     "from": "no-reply@olinapps.mailgun.org",
     "to": user['_id'] + '@' + user['domain'],
     "subject": "Olin Apps Password Reset",
-    "text": "Please reset your password by following this link:\n\nhttp://auth.olinapps.com/reset?token=" + token
+    "text": "Please reset your password by following this link:\n\nhttp://olinapps.com/reset?token=" + token
     })
 
 def ensure_user(email):
