@@ -135,8 +135,14 @@ def route_index():
     external=request.args.get('external'),
     user=user)
 
-@app.route('/me')
-def route_me():
+@app.route('/api')
+def route_api():
+  user = get_session_user()
+  return render_template('api.html',
+    user=user)
+
+@app.route('/api/me')
+def route_api_me():
   user = get_session_user()
   if user:
     return jsonify(error=False, user={

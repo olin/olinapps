@@ -19,6 +19,17 @@
 
     <div class="container-fluid">
 
+      {% if user %}
+        <div id="login">You are logged in as <code>{{user._id}}</code>.
+          <form action="/logout" method="post">
+            <button class="btn btn-danger btn-mini">Logout</button>
+          </form>
+        </div>
+      {% else %}
+        <div id="login">
+          <a href="/login" class="btn btn-success btn-mini">Login to Olin Apps</a>
+        </div>
+      {% endif %}
       <h1><a href="/">Olin Apps</a></h1>
       <div id="body">
         {% block body %}{% endblock %}
