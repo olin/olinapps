@@ -131,7 +131,7 @@ def route_reset():
 @app.route('/')
 def route_index():
   user = get_session_user()
-  return render_template('login.html',
+  return render_template('index.html',
     external=request.args.get('external'),
     user=user)
 
@@ -157,14 +157,20 @@ def route_external():
   else:
     return redirect('/?external=%s' % request.args.get('callback'))
 
-@app.route('/login', methods=['POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def route_login():
-  # Normalize username.
-  username = request.form.get('email')
-  if not username:
+  if request.method == 'GET':
+    user = get_session_user()
     return render_template('login.html',
       external=request.args.get('external'),
-      message="Please enter an email address.")
+      user=user)
+  # Normalize username.
+  else:
+    username = request.form.get('email')
+    if not username:
+      return render_template('login.html',
+        external=request.args.get('external'),
+        message="Please enter an email address.")
 
   # Check for canonical emails.
   if email_domain_part(username) not in ['olin.edu', 'students.olin.edu', 'alumni.olin.edu']:

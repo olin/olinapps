@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<style>
+#page-projects p { padding: 5px 0 10px 190px; }
+#page-projects a { width: 150px; margin-left: -190px; float: left; margin-top: -5px; }
+#page-projects p, #page-projects h2 { clear: left; }
+</style>
+
+<div id="page-projects">
+  <h2>Utilities</h2>
+
+  <p><a href="http://fwol.in/" class="btn"><b>fwol.in</b></a> The Olin Community Portal.</p>
+  <p><a href="http://fwol.in/directory/" class="btn"><b>Directory</b></a> Olin community person lookup.</p>
+  <p><a href="http://fwol.in/launchpad/" class="btn"><b>Launchpad</b></a> Links to all of Olin's most popular web destinations.</p>
+  <p><a href="http://fwol.in/calendar/" class="btn"><b>Calendar</b></a>Schoolwide events calendar.</p>
+  <p><a href="http://printers.olinapps.com" class="btn"><b>Printers</b></a> Lists the Olin printers and information on how to access them.</p>
+  <p><a href="http://webcams.olinapps.com/" class="btn"><b>Webcams</b></a> Student-run webcams for analysis and cool factor.</p>
+
+  <h2>Apps</h2>
+  <p><a href="http://map.olinapps.com" class="btn"><b>Marauder's Map</b></a>Where are students on campus?</p>
+  <p><a href="http://dominion.olinapps.com" class="btn"><b>Dominion</b></a> A randomizer for the game Dominion.</p>
+  <p><a href="http://guess.olinapps.com" class="btn"><b>Guess the Oliner</b></a> How well do you know the names of other Oliners? Find out, gamified!</p>
+</div>
+{% endblock %}

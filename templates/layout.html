@@ -2,14 +2,24 @@
 
 <html>
   <head>
-    <title>Login to Olin Apps</title>
+    <title>Olin Apps</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
     <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/css/bootstrap-combined.min.css" rel="stylesheet">
     <link href="/static/style.css" rel="stylesheet">
   </head>
   <body>
+    <header>
+      <ul id="olinstar">
+        <li class="apps"><a href="//olinapps.com/">olin<b>apps</b>.com</a></li>
+        <li class="students"><a href="//olinstudents.com/">olin<b>students</b>.com</a></li>
+        <li class="clubs"><a href="//olinclubs.com/">olin<b>clubs</b>.com</a></li>
+        <li class="projects"><a href="//olinprojects.com/">olin<b>projects</b>.com</a></li>
+      </ul>
+    </header>
+
     <div class="container-fluid">
-      <h1><a href="/">Olin Apps Auth</a></h1>
+
+      <h1><a href="/">Olin Apps</a></h1>
       <div id="body">
         {% block body %}{% endblock %}
       </div>

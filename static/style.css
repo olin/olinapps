@@ -1,5 +1,5 @@
 .container-fluid { max-width: 600px; margin-left: auto; margin-right: auto;}
-body { background: #ddd; padding-top: 30px;}
+body { background: #ddd; padding-bottom: 30px; }
 
 h1 { margin: 0 0 10px; font-size: 26px; font-weight: normal; }
 h1 a { color: #943; }
@@ -9,3 +9,17 @@ hr { border-top-color: #ccc; }
 
 #body { border: 1px solid #999; background: #eee; box-shadow: #666 2px 2px 2px;
 padding: 15px 30px;}
+
+header { overflow: auto; font-size: 18px;
+  color: #aaa; border: none; background: #444; border-bottom: 1px solid #fff;
+  padding: 0 0; margin-bottom: 18px;}
+#olinstar, #olinstar li { display: block; margin: 0; padding: 0; list-style: none; }
+#olinstar { overflow: auto; max-width: 700px; margin: 0 auto; }
+#olinstar a { text-decoration: none; color: inherit; padding: 10px; display: block; }
+#olinstar a:hover { color: white; background: #555; }
+#olinstar li { float: left; width: 25%; text-align: center; }
+#olinstar b { font-weight: normal; }
+#olinstar .apps b { color: #C26;}
+#olinstar .students b { color: #3AC;}
+#olinstar .clubs b { color: #3CA;}
+#olinstar .projects b { color: #F90;}
