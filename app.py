@@ -259,7 +259,7 @@ def network_login(dn, user, password):
     res = opener.open(req).read()
 
     # parse result
-    return re.search(r'<t:EmailAddress>([^<]+)</t:EmailAddress>', res).group(1)
+    return re.search(r'<t:EmailAddress>([^<]+)</t:EmailAddress>', res).group(1).lower()
   except Exception, e:
     return False
 
