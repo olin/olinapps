@@ -273,7 +273,13 @@ def api_exchangelogin():
     if email:
       user = ensure_user(email)
       sessionid = generate_session(user)
-      return Response(json.dumps({"sessionid": sessionid}), 200, {'Content-Type': 'application/json'})
+      return Response(json.dumps({
+        "sessionid": sessionid,
+        "user": {
+          "domain": user['domain'],
+          "id": user['_id'],
+          "created": user['created']
+          }}), 200, {'Content-Type': 'application/json'})
   return Response(json.dumps({"error": "Invalid login."}), 401, {'Content-Type': 'application/json'})
 
 
