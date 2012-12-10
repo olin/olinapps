@@ -156,13 +156,13 @@ def route_api_me():
 @app.route('/external')
 def route_external():
   user = get_session_user()
-  if True:
+  if user:
     return render_template('external.html',
       external=request.args.get('callback'),
       domain=urlparse(request.args.get('callback')).netloc,
       sessionid=session['sessionid'])
   else:
-    return redirect('/?external=%s' % request.args.get('callback'))
+    return redirect('/login?external=%s' % request.args.get('callback'))
 
 @app.route('/login', methods=['GET', 'POST'])
 def route_login():
@@ -170,6 +170,7 @@ def route_login():
     user = get_session_user()
     return render_template('login.html',
       external=request.args.get('external'),
+      domain=urlparse(request.args.get('external')).netloc if request.args.get('external') else None,
       user=user)
   # Normalize username.
   else:
