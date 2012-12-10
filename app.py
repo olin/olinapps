@@ -159,7 +159,7 @@ def route_external():
   if user:
     return render_template('external.html',
       external=request.args.get('callback'),
-      domain=urlparse(request.args.get('callback')).netloc,
+      domain=urlparse(request.args.get('callback', '')).netloc,
       sessionid=session['sessionid'])
   else:
     return redirect('/login?external=%s' % request.args.get('callback'))
@@ -206,7 +206,7 @@ def route_login():
   #  return redirect(request.args.get('callback') + '?sessionid=' + session['sessionid'])
 
   if request.args.get('external'):
-    return redirect('/external?%s' % request.args.get('external'))
+    return redirect('/external?callback=%s' % request.args.get('external'))
   return redirect('/')
 
 @app.route('/logout', methods=['POST'])
