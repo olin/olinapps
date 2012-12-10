@@ -91,6 +91,7 @@ def generate_session(user):
     user['sessionid'] = str(uuid.uuid1())
     db.users.update({"_id": user['_id']}, user)
   session['sessionid'] = user['sessionid']
+  return user['sessionid']
 
 def get_session_user():
   if 'sessionid' not in session and not request.args.get('sessionid'):
@@ -217,6 +218,63 @@ def route_logout():
     db.users.update({"_id": user['_id']}, user)
   session.pop('sessionid', None)
   return redirect('/')
+
+
+# Exchange login
+# -----------
+
+import urllib2, re, getpass, urllib2, base64
+from urllib2 import URLError
+from ntlm import HTTPNtlmAuthHandler
+
+def network_login(dn, user, password):
+  try:
+    url = "https://webmail.olin.edu/ews/exchange.asmx"
+
+    # setup HTTP password handler
+    passman = urllib2.HTTPPasswordMgrWithDefaultRealm()
+    passman.add_password(None, url, dn + '\\' + user, password)
+    # create NTLM authentication handler
+    auth_NTLM = HTTPNtlmAuthHandler.HTTPNtlmAuthHandler(passman)
+    proxy_handler =  urllib2.ProxyHandler({})
+    opener = urllib2.build_opener(proxy_handler,auth_NTLM)
+
+    # this function sends the custom SOAP command which expands
+    # a given distribution list
+    data = """<?xml version="1.0" encoding="utf-8"?>
+  <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+               xmlns:t="http://schemas.microsoft.com/exchange/services/2006/types">
+    <soap:Body>
+    <ResolveNames xmlns="http://schemas.microsoft.com/exchange/services/2006/messages"
+                  xmlns:t="http://schemas.microsoft.com/exchange/services/2006/types"
+                  ReturnFullContactData="true">
+      <UnresolvedEntry>%s</UnresolvedEntry>
+    </ResolveNames>
+    </soap:Body>
+  </soap:Envelope>
+  """ % user
+    # send request
+    headers = {'Content-Type': 'text/xml; charset=utf-8'}
+    req = urllib2.Request(url, data=data, headers=headers)
+    res = opener.open(req).read()
+
+    # parse result
+    return re.search(r'<t:EmailAddress>([^<]+)</t:EmailAddress>', res).group(1)
+  except Exception, e:
+    return False
+
+
+# API
+
+@app.route('/api/exchangelogin', methods=['POST'])
+def api_exchangelogin():
+  if request.form.has_key('username') and request.form.has_key('password'):
+    email = network_login('MILKYWAY', request.form['username'], request.form['password'])
+    if email:
+      user = ensure_user(email)
+      sessionid = generate_session(user)
+      return Response(json.dumps({"sessionid": sessionid}), 200, {'Content-Type': 'application/json'})
+  return Response(json.dumps({"error": "Invalid login."}), 401, {'Content-Type': 'application/json'})
 
 
 #
