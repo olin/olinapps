@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block body %}
   <h2>External Auth</h2>
-  <p>Click to sign in with {{ external }}.</p>
+  <p>Click to sign in with <b><a href="{{ external }}">{{ external }}</a></b>.</p>
 
   <form method="post" class="form-horizontal" action="{{ external }}">
     <div class="form-actions">
