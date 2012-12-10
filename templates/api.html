@@ -6,7 +6,7 @@
   <p>To authenticate users on Olin Apps requires a unique session key.</p>
 
   <ul>
-    <li><p><b>Web apps:</b> Redirect the user to <a href="http://auth.olinapps.com/external?callback=http://example.com/">http://auth.olinapps.com/external?callback=http://example.com/</a>. If the user approves the app, they are redirected to the callback URL as a <code>POST</code> request with the <code>sessionid=<em>&lt;unique-session-key&gt;</em></code> form value. If the user rejects the app, they are returned via <code>GET</code>.</p></li>
+    <li><p><b>Web apps:</b> Redirect the user to <a href="http://olinapps.com/external?callback=http://example.com/">http://olinapps.com/external?callback=http://example.com/</a>. If the user approves the app, they are redirected to the callback URL as a <code>POST</code> request with the <code>sessionid=<em>&lt;unique-session-key&gt;</em></code> form value. If the user rejects the app, they are returned via <code>GET</code>.</p></li>
 
     <!--
     <li><p><b>Native/mobile apps:</b> POST <a href="https://ohack-auth.herokuapp.com/exchangelogin">https://ohack-auth.herokuapp.com/exchangelogin</a> with the user's network <code>username</code> and <code>password</code>. This call returns <code>401</code> if invalid, or <code>200</code> with a JSON body <code>{"sessionid": "<em>&lt;unique-uuid-key&gt;</em>"}</code>.</p></li>
