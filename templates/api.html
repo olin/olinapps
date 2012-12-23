@@ -7,15 +7,26 @@
 
 <ol type="a">
   <li>
-  <p><b>Web apps:</b> Redirect the user to <a href="http://olinapps.com/external?callback=http://example.com/">http://olinapps.com/external?callback=http://example.com/</a>. If the user approves the app, they are redirected to the callback URL as a <code>POST</code> request with the <code>sessionid=<em>&lt;unique-session-key&gt;</em></code> form value. If the user rejects the app, they are returned via <code>GET</code>.</p>
+  <p><b>Web apps:</b> Redirect the user to</p>
+  <pre><a href="http://olinapps.com/external?callback=http://example.com/">http://olinapps.com/external?callback=<i>http://example.com/</i></a></pre>
+  <p>If the user approves the app, they are returned to the callback URL with a <code>POST</code> request; its form value <code>sessionid</code> will be a unique session key that can be used to acess the API. Save this and access <code>/api/me</code> (see below) to find out the user's identiy. If the user rejects the app, they are sent back to the callback URL via a <code>GET</code> request with no sessionid.</p>
 </li>
 
 <li>
-  <p><b>Native/mobile apps:</b> POST <a href="https://olinapps.herokuapp.com/exchangelogin">https://olinapps.herokuapp.com/exchangelogin</a> with the user's network <code>username</code> and <code>password</code>. This call returns <code>401</code> if invalid, or <code>200</code> with a JSON body <code>{"sessionid": "<em>&lt;unique-uuid-key&gt;</em>", "user": {"id": "first.last", "domain": "___.olin.edu"}}</code>.</p>
+  <p><b>Native/mobile apps:</b> Send a POST request to</p>
+  <pre><a href="https://olinapps.herokuapp.com/exchangelogin">https://olinapps.herokuapp.com/exchangelogin</a></pre>
+  <p>Include the form values <code>username</code> and <code>password</code> containing the user's network credentials (don't include the <code>MILKYWAY\</code>). The server will respond with an error code of 401 if invalid, or 200 and a JSON body:</p> <pre>{"sessionid": "<em>&lt;unique-uuid-key&gt;</em>", "user": {"id": "first.last", "domain": "<i>example</i>.olin.edu"}}</pre>
 </li></ol>
     
   </ol>
 
-  <p>Once authenticated, you can GET <a href="http://olinapps.com/api/me">http://olinapps.com/me?sessionid=<em>&lt;unique-session-key&gt;</em></a> at any time to check that the user is still logged in.</a>
+  <h3>User and Session Information</h3>
+  <p>Once authenticated, you can send a GET request from your server to</p>
+  <pre><a href="http://olinapps.com/api/me">http://olinapps.com/me?sessionid=<em>&lt;unique-session-key&gt;</em></a></pre>
+  <p>This returns the user's information in JSON, and also checks that your session key is still valid. If the session key has become invalid (for example, the user has logged out) this method returns an error code of 401.</a>
+
+  <br><br>
+
+  <p><em>Once authenticated, you can use other Olin Apps APIs such as the <a href="http://directory.olinapps.com/api">Directory API</a>.</em></p>
 
 {% endblock %}

@@ -13,12 +13,12 @@ hr { border-top-color: #ccc; }
 #body { border: 1px solid #999; background: #eee; box-shadow: #666 2px 2px 2px;
 padding: 15px 30px;}
 
-header { overflow: auto; font-size: 18px;
+header { overflow: auto; font-size: 16px;
   color: #aaa; border: none; background: #444; border-bottom: 1px solid #fff;
-  padding: 0 0; margin-bottom: 18px;}
+  padding: 0 0; margin-bottom: 18px; height: 35px;}
 #olinstar, #olinstar li { display: block; margin: 0; padding: 0; list-style: none; }
-#olinstar { overflow: auto; max-width: 700px; margin: 0 auto; }
-#olinstar a { text-decoration: none; color: inherit; padding: 10px; display: block; }
+#olinstar { overflow: auto; max-width: 650px; margin: 0 auto; }
+#olinstar a { text-decoration: none; color: inherit; padding: 7px 0 0; height: 28px; display: block; }
 #olinstar a:hover { color: white; background: #555; }
 #olinstar li { float: left; width: 25%; text-align: center; }
 #olinstar b { font-weight: normal; }
