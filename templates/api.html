@@ -14,8 +14,16 @@
 
 <li>
   <p><b>Native/mobile apps:</b> Send a POST request to</p>
-  <pre><a href="https://olinapps.herokuapp.com/exchangelogin">https://olinapps.herokuapp.com/exchangelogin</a></pre>
-  <p>Include the form values <code>username</code> and <code>password</code> containing the user's network credentials (don't include the <code>MILKYWAY\</code>). The server will respond with an error code of 401 if invalid, or 200 and a JSON body:</p> <pre>{"sessionid": "<em>&lt;unique-uuid-key&gt;</em>", "user": {"id": "first.last", "domain": "<i>example</i>.olin.edu"}}</pre>
+  <pre><a href="https://olinapps.herokuapp.com/api/exchangelogin">https://olinapps.herokuapp.com/exchangelogin</a></pre>
+  <p>Include the form values <code>username</code> and <code>password</code> containing the user's network credentials (don't include the <code>MILKYWAY\</code>). The server will respond with an error code of 401 if invalid, or 200 and a JSON body:</p>
+  <pre>{
+  "sessionid": "<em>&lt;unique-uuid-key&gt;</em>",
+  "user": {
+    "created": 1384484848483,
+    "id": "first.last",
+    "domain": "<i>example</i>.olin.edu"
+  }
+}</pre>
 </li></ol>
     
   </ol>
@@ -25,8 +33,16 @@
   <pre><a href="http://olinapps.com/api/me">http://olinapps.com/me?sessionid=<em>&lt;unique-session-key&gt;</em></a></pre>
   <p>This returns the user's information in JSON, and also checks that your session key is still valid. If the session key has become invalid (for example, the user has logged out) this method returns an error code of 401.</a>
 
-  <br><br>
-
   <p><em>Once authenticated, you can use other Olin Apps APIs such as the <a href="http://directory.olinapps.com/api">Directory API</a>.</em></p>
+
+  <h3>Testing</h3>
+  <p>First install <a href="https://github.com/jkbr/httpie">httpie</a>. Run the following command to obtain a <code>sessionid</code>:</p>
+
+  <pre>http -fv POST https://olinapps.herokuapp.com/api/exchangelogin username=<i>&lt;your username&gt;</i> password=<i>&lt;your password&gt;</i></pre>
+
+  <p>Then attempt to access a protected resource:</p>
+
+  <pre>http GET http://olinapps.com/api/me sessionid==<i>&lt;sessionid string&gt;</i>
+http GET http://directory.olinapps.com/api/people sessionid==<i>&lt;sessionid string&gt;</i></pre>
 
 {% endblock %}
