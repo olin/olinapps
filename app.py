@@ -261,6 +261,7 @@ def network_login(dn, user, password):
     # parse result
     return re.search(r'<t:EmailAddress>([^<]+)</t:EmailAddress>', res).group(1).lower()
   except Exception, e:
+    print e
     return False
 
 
