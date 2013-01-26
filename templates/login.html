@@ -2,7 +2,7 @@
 {% block body %}
 
   {% if not user %}
-  <h2>Login to {% if domain %}Olin Apps{% else %}<a href="{{ external }}">{{ domain }}</a>{% endif %}</h2>
+  <h2>Login to {% if not domain %}Olin Apps{% else %}<a href="{{ external }}">{{ domain }}</a>{% endif %}</h2>
   <p class="muted">Log in with your Olin email address ending in <i>@students.olin.edu</i>, <i>@alumni.olin.edu</i>, or <i>@olin.edu</i>. Make sure to use your full email, not an alias.</p>
 
   {% if message %}
