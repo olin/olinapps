@@ -107,19 +107,26 @@ def route_reset():
     })
   if not request.args.get('token') or not user:
     if request.method == 'GET':
-      return render_template('reset.html')
+      return render_template('reset.html',
+        create=request.args.has_key('create')
+        )
     else:
       reset_password(ensure_user(request.form.get('email')))
       return render_template('reset_sent.html')
 
   if request.args.get('token') and request.method == 'GET':
-    return render_template('reset_pass.html', user=user)
+    return render_template('reset_pass.html', 
+      create=request.args.has_key('create'),
+      user=user
+      )
 
   password = request.form.get('password', '')
   if len(password) < 8:
     return render_template('reset_pass.html',
       user=user,
-      message="Password must be at least eight characters long.")
+      create=request.args.has_key('create'),
+      message="Password must be at least eight characters long."
+      )
 
   # Update user
   user['password'] = hash_password(password)
@@ -192,13 +199,13 @@ def route_login():
   user = ensure_user(username)
 
   # Reset or match password.
-  if not user['password']:
-    reset_password(user)
-    return render_template('reset_sent.html')
-  if not match_password(request.form.get('password'), user['password']):
+  # if not user['password']:
+  #   reset_password(user)
+  #   return render_template('reset_sent.html')
+  if not user['password'] or not match_password(request.form.get('password'), user['password']):
     return render_template('login.html',
       external=request.args.get('external'),
-      message="No such user or invalid password.",
+      message="No such user or invalid password. If you are trying to create an Olin Apps account, <a href=\"/reset?create\">click here</a>.",
       email=username)
 
   generate_session(user)
