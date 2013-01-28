@@ -187,12 +187,14 @@ def route_login():
     if not username:
       return render_template('login.html',
         external=request.args.get('external'),
+        domain=urlparse(request.args.get('external')).netloc if request.args.get('external') else None,
         message="Please enter an email address.")
 
   # Check for canonical emails.
   if email_domain_part(username) not in ['olin.edu', 'students.olin.edu', 'alumni.olin.edu']:
     return render_template('login.html',
       external=request.args.get('external'),
+      domain=urlparse(request.args.get('external')).netloc if request.args.get('external') else None,
       message="Not a valid olin.edu email address.",
       email=username)
 
@@ -206,6 +208,7 @@ def route_login():
   if not user['password'] or not match_password(request.form.get('password'), user['password']):
     return render_template('login.html',
       external=request.args.get('external'),
+      domain=urlparse(request.args.get('external')).netloc if request.args.get('external') else None,
       message="No such user or invalid password. If you are trying to create an Olin Apps account, <a href=\"/reset?create\">click here</a>.",
       email=username)
 
