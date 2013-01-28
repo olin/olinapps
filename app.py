@@ -67,6 +67,7 @@ def reset_password(user):
     })
 
 def ensure_user(email):
+  email = email.lower()
   try:
     user = db.users.find_one({
       "_id": email_local_part(email)
