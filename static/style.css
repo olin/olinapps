@@ -1,7 +1,7 @@
 .container-fluid { max-width: 600px; margin-left: auto; margin-right: auto;}
 body { background: #ddd; padding-bottom: 30px; }
 
-h1 { margin: 0 0 10px; font-size: 26px; font-weight: normal; }
+h1 { margin: 0 0 10px; font-size: 26px; font-weight: normal; color: #888; }
 h1 a { color: #943; }
 #login { float: right; line-height: 46px; }
 #login form { display: inline; margin-left: 10px;}
