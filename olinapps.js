@@ -28,7 +28,7 @@ function getEmail (user) {
   return user && (String(user.id) + '@' + String(user.domain));
 }
 
-function user (req) {
+function getSessionUser (req) {
   if (req.session.user) {
     var user = JSON.parse(JSON.stringify(req.session.user));
     user.username = getUsername(user);
@@ -61,7 +61,7 @@ function redirectLogin (req, res, next) {
 }
 
 function middleware (req, res, next) {
-  if (user(req)) {
+  if (getSessionUser(req)) {
     next();
   } else if ('sessionid' in req.query) {
     loadSession(req, req.query.sessionid, function (success) {
@@ -82,7 +82,7 @@ function middleware (req, res, next) {
 
 module.exports = {
   loadSession: loadSession,
-  user: user,
+  user: getSessionUser,
   login: login,
   logout: logout,
   middleware: middleware
