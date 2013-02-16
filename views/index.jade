@@ -1,0 +1,27 @@
+extends layout
+
+block content
+  h1= title
+  form.form-horizontal(action='/quotes', method='post')
+    .control-group
+      label.control-label(for='quote') Quotation:
+      .controls
+        textarea(id='quote', name='quote', placeholder: 'Quotation')
+    .control-group
+      label.control-label(for='names') Who said the quote:
+      .controls
+        input(id='names', name='name', type='text', placeholder: 'Name')
+    .control-group
+      .controls
+        button.btn-success.btn(type='submit') Submit new quote
+
+  h2 Quote board
+  ul(id='quotes')
+    for quote in quotes
+      li
+        blockquote
+          p &ldquo;#{quote.quote}&rdquo;
+          em
+            cite &mdash; #{quote.name}
+        small
+          | Submitted by #{quote.submitter}
