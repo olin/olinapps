@@ -6,7 +6,7 @@
 var express = require('express')
   , http = require('http')
   , path = require('path')
-  , olinapps = require('olinapps')
+  , olinapps = require('./olinapps')
   , mongojs = require('mongojs');
 
 var app = express(), db;
