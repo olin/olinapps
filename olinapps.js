@@ -61,7 +61,7 @@ function redirectLogin (req, res, next) {
 }
 
 function middleware (req, res, next) {
-  if (getSessionUser(req)) {
+  if (user(req)) {
     next();
   } else if ('sessionid' in req.query) {
     loadSession(req, req.query.sessionid, function (success) {
