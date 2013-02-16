@@ -67,7 +67,7 @@ app.post('/quotes', function (req, res) {
     db.quotes.save({
       name: req.body.name,
       quote: req.body.quote,
-      submitter: olinapps.getSessionUser(req).username,
+      submitter: olinapps.user(req).username,
       date: Date.now()
     }, res.redirect.bind(res, '/'));
   } else {
