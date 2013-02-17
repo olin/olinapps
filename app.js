@@ -6,7 +6,7 @@
 var express = require('express')
   , http = require('http')
   , path = require('path')
-  , olinapps = require('./olinapps')
+  , olinapps = require('olinapps')
   , mongojs = require('mongojs');
 
 var app = express(), db;
@@ -50,7 +50,7 @@ app.all('/*', olinapps.middleware);
 app.get('/', function (req, res) {
   db.quotes.find().sort({date: -1}, function (err, docs) {
     res.render('index', {
-      title: 'Olin Quotes',
+      title: 'Olin Quotes Board v4.0',
       quotes: docs
     });
   })
