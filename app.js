@@ -56,13 +56,29 @@ app.all('/*', olinapps.loginRequired);
  */
 
 app.get('/', function (req, res) {
-  db.quotes.find().sort({date: -1}, function (err, docs) {
+  db.quotes.find({
+    published: true
+  }).sort({date: -1}, function (err, docs) {
+    console.log(docs);
     res.render('index', {
       title: 'Olin Quotes Board v4.0',
-      quotes: docs
+      quotes: docs,
+      user: olinapps.user(req)
     });
   })
 });
+
+app.post('/delete', function (req, res) {
+  db.quotes.update({
+    _id: db.ObjectId(req.body.id)
+  }, {
+    $set: {
+      published: false
+    }
+  }, function () {
+    res.redirect('/');
+  })
+})
 
 app.get('/names', function (req, res) {
   db.quotes.distinct('name', function (err, names) {
@@ -76,7 +92,8 @@ app.post('/quotes', function (req, res) {
       name: req.body.name,
       quote: req.body.quote,
       submitter: olinapps.user(req).username,
-      date: Date.now()
+      date: Date.now(),
+      published: true
     }, res.redirect.bind(res, '/'));
   } else {
     res.json({error: true, message: 'Invalid quote'}, 500);

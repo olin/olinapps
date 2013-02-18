@@ -23,5 +23,9 @@ block content
           p &ldquo;#{quote.quote}&rdquo;
           em
             cite &mdash; #{quote.name}
-        small
-          | Submitted by #{quote.submitter}
+        form(action="/delete", method="post")
+          small
+            | Submitted by #{quote.submitter}  
+            if quote.submitter = user.username
+              button.btn.btn-mini(type="submit", name="id", value=quote._id, style="padding: 0 5px", onclick="return confirm('Are you sure you want to purge this quote from history?')")
+                | &times;
