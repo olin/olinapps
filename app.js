@@ -69,7 +69,6 @@ app.get('/', function (req, res) {
 });
 
 app.post('/delete', function (req, res) {
-  console.log(olinapps.user(req).username);
   db.quotes.update({
     _id: db.ObjectId(req.body.id),
     submitter: olinapps.user(req).username

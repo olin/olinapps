@@ -6,21 +6,22 @@ block content
     .control-group
       label.control-label(for='quote') Quotation:
       .controls
-        textarea(id='quote', name='quote', placeholder: 'Quotation')
+        textarea(id='quote', name='quote', rows=6) "Text"
     .control-group
-      label.control-label(for='names') Who said the quote:
+      label.control-label(for='names') People / context:
       .controls
-        input(id='names', name='name', type='text', placeholder: 'Name')
+        | &mdash; 
+        input(id='names', name='name', type='text', placeholder='People or setting')
     .control-group
       .controls
-        button.btn-success.btn(type='submit') Submit new quote
+        button.btn-success.btn(type='submit') Post
 
   h2 Quote board
   ul(id='quotes')
     for quote in quotes
       li
         blockquote
-          p &ldquo;#{quote.quote}&rdquo;
+          p #{quote.quote}
           em
             cite &mdash; #{quote.name}
         form(action="/delete", method="post")
