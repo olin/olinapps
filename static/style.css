@@ -1,28 +1,39 @@
-.container-fluid { max-width: 600px; margin-left: auto; margin-right: auto;}
+/* olinstar */
+header.olinstar { overflow: auto; font-size: 16px;
+  color: #aaa; border: none; background: #444; border-bottom: 1px solid #fff;
+  padding: 0 0; margin-bottom: 18px; height: 32px;}
+header.olinstar ul, header.olinstar li { display: block; margin: 0; padding: 0; list-style: none; }
+header.olinstar ul { overflow: auto; max-width: 650px; margin: 0 auto; }
+header.olinstar a { text-decoration: none; color: inherit; padding: 5px 0 0; height: 28px; display: block; }
+header.olinstar a:hover { color: white; background: #555; }
+header.olinstar li { float: left; width: 25%; text-align: center; }
+header.olinstar b { font-weight: normal; }
+header.olinstar .apps b { color: #C26;}
+header.olinstar .students b { color: #3AC;}
+header.olinstar .clubs b { color: #3CA;}
+header.olinstar .projects b { color: #F90;}
+
+/* body */
 body { background: #ddd; padding-bottom: 30px; }
 
-h1 { margin: 0 0 10px; font-size: 26px; font-weight: normal; color: #888; }
-h1 a { color: #943; }
-#login { float: right; line-height: 46px; }
-#login form { display: inline; margin-left: 10px;}
+/* slim theme */
+body.slim .container-fluid { max-width: 900px; margin-left: auto; margin-right: auto;}
 
-h2 { font-size: 22px; }
-h3 { font-size: 18px; }
-hr { border-top-color: #ccc; }
+body.slim h1 { margin: 0 0 10px; font-size: 26px; font-weight: normal; color: #888; }
+body.slim h1 a { color: #943; }
+body.slim #login { float: right; line-height: 46px; }
+body.slim #login form { display: inline; margin-left: 10px;}
 
-#body { border: 1px solid #999; background: #eee; box-shadow: #666 2px 2px 2px;
-padding: 15px 30px;}
+body.slim h2 { font-size: 22px; }
+body.slim h3 { font-size: 18px; }
+body.slim hr { border-top-color: #ccc; }
 
-header { overflow: auto; font-size: 16px;
-  color: #aaa; border: none; background: #444; border-bottom: 1px solid #fff;
-  padding: 0 0; margin-bottom: 18px; height: 35px;}
-#olinstar, #olinstar li { display: block; margin: 0; padding: 0; list-style: none; }
-#olinstar { overflow: auto; max-width: 650px; margin: 0 auto; }
-#olinstar a { text-decoration: none; color: inherit; padding: 7px 0 0; height: 28px; display: block; }
-#olinstar a:hover { color: white; background: #555; }
-#olinstar li { float: left; width: 25%; text-align: center; }
-#olinstar b { font-weight: normal; }
-#olinstar .apps b { color: #C26;}
-#olinstar .students b { color: #3AC;}
-#olinstar .clubs b { color: #3CA;}
-#olinstar .projects b { color: #F90;}
+body.slim #body { border: 1px solid #999; background: #eee; box-shadow: #666 2px 2px 2px; padding: 15px 30px; }
+
+/* mobile */
+@media screen 
+and (max-width : 767px) {
+  header.olinstar { display: none; }
+  body.slim #login { float: none; background: #444; border-bottom: 1px solid #fff; color: white;
+    margin: 0 -20px 10px; padding: 0 20px;
+}
