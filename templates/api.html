@@ -48,4 +48,16 @@
   <pre>http GET http://olinapps.com/api/me sessionid==<i>&lt;sessionid string&gt;</i>
 http GET http://directory.olinapps.com/api/people sessionid==<i>&lt;sessionid string&gt;</i></pre>
 
+<h2>Directory API</h2>
+
+The directory API provides pictures and individual information to authenticated users.
+
+<ol>
+  <li> Authenticate using the above Authentication API.</li>
+  <li>Include ?sessionid=<unique-session-ey> onto each URL call below.</li>
+</ol>
+
+<p><b>Authenticated account:</b> <code><a href="http://directory.olinapps.com/api/me">http://directory.olinapps.com/api/me</a><code></p>
+<p><b>List all people:</b> <code><a href="http://directory.olinapps.com/api/people">http://directory.olinapps.com/api/people</a><code></p>
+
 {% endblock %}
