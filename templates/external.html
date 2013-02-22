@@ -1,13 +1,13 @@
 {% extends "layout.html" %}
 {% block body %}
-  <h2>External Auth</h2>
-  <p>Click to sign in to the application <b><a href="{{ external }}">{{ domain }}</a></b>.</p>
+  <h2>Login to {{ domain }}</h2>
+  <p>The application <b><a href="{{ external }}">{{ domain }}</a></b> is requesting access to your information.</p>
 
   <form method="post" class="form-horizontal" action="{{ external }}">
     <div class="form-actions">
       <input name="sessionid" value="{{ sessionid }}" type="hidden">
-      <button class="btn btn-success">Authorize</button>
-      <a href="{{ external }}" class="btn">Return to Site</a>
+      <button class="btn btn-success">Allow</button>
+      <a href="{{ external }}" class="btn">Cancel</a>
     </div>
   </form>
 {% endblock %}
