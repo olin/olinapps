@@ -20,7 +20,14 @@ body { background: #ddd; padding-bottom: 30px; }
 body.slim .container-fluid { max-width: 900px; margin-left: auto; margin-right: auto;}
 
 body.slim h1 { margin: 0 0 10px; font-size: 26px; font-weight: normal; color: #888; }
-body.slim h1 a { color: #943; }
+body.slim h1 a { color: #349; font-weight: bold; }
+body.slim h1 a::before {
+  display: inline-block; width: 56px; height: 24px;
+  background: url(http://olinapps.com/static/olinlogo.png) no-repeat center center;
+  content: "";
+  vertical-align: baseline;
+  margin-right: 8px;
+}
 body.slim #login { float: right; line-height: 46px; }
 body.slim #login form { display: inline; margin-left: 10px;}
 
