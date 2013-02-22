@@ -177,7 +177,8 @@ def route_external():
     return render_template('external.html',
       external=request.args.get('callback'),
       domain=urlparse(request.args.get('callback', '')).netloc,
-      sessionid=session['sessionid'])
+      sessionid=session['sessionid'],
+      user=user)
   else:
     return redirect('/login?external=%s' % request.args.get('callback'))
 
