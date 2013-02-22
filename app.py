@@ -162,6 +162,14 @@ def route_api_me():
   else:
     return jsonify(error=True)
 
+@app.route('/api/sessionid')
+def route_api_me():
+  user = get_session_user()
+  if user:
+    return jsonify(error=False, sessionid=user['sessionid'])
+  else:
+    return jsonify(error=True)
+
 @app.route('/external')
 def route_external():
   user = get_session_user()
