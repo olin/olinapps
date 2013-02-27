@@ -42,7 +42,7 @@ On reset, we check if the username is a proxy name or not.
 """
 
 app = Flask(__name__)
-app.secret_key = 'https://ia600808.us.archive.org/27/items/FoundryAndOlinPresentationByMichaelMoody/'
+app.secret_key = os.getenv('SESSION_SECRET');
 
 def email_local_part(email):
   return email.split('@')[0]
