@@ -72,16 +72,12 @@ http GET http://directory.olinapps.com/api/people sessionid==<i>&lt;sessionid st
 
 <ul>
   <li>
-    <a href="http://lists.olinapps.com/api/lists/helpme?text=helpyou"><code>http://lists.olinapps.com/api/lists/[list name]?sessionid=...&text=[some text to search for]</code></a>
+    <a href="http://lists.olinapps.com/api/lists/helpme?text=helpyou"><code>http://lists.olinapps.com/api/lists/[list name]?sessionid=...&amp;text=[some text to search for]</code></a>
     <br>This returns a JSON object with an "urls" property, each a link to a batched JSON list of messages (50 each). The IDs are definitely not in Date order, despite their appearance.
   </li>
   <li>
-    <a href="http://lists.olinapps.com/api/messages?ids=55927,74429,74531,74536,74537,74663,74743,74818,74834,75057,75182,75214,75252,75254,75292,75380,75476,75512,75746,75747"><code>http://lists.olinapps.com/api/messages?ids=[comma separated list of mail ids]&sessionid=...</code></a>
+    <a href="http://lists.olinapps.com/api/messages?ids=55927,74429,74531,74536,74537,74663,74743,74818,74834,75057,75182,75214,75252,75254,75292,75380,75476,75512,75746,75747"><code>http://lists.olinapps.com/api/messages?sessionid=...&amp;ids=[comma separated list of mail ids]</code></a>
     <br>Return the content for a set of messages.
-  </li>
-  <li>
-    <a href="http://lists.olinapps.com/api/lists/helpme/archive"><code>http://lists.olinapps.com/api/lists/[list name]/archive?sessionid=...</code></a>
-    <br>Download the entire archive for a mailing list. <b>Don't use this endpoint too often.</b> Please download and cache the contents if you want to analyze an entire mailing list.
   </li>
 </ul>
 
