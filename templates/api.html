@@ -48,6 +48,8 @@
   <pre>http GET http://olinapps.com/api/me sessionid==<i>&lt;sessionid string&gt;</i>
 http GET http://directory.olinapps.com/api/people sessionid==<i>&lt;sessionid string&gt;</i></pre>
 
+<hr>
+
 <h2>Directory API</h2>
 
 <p>The directory API provides pictures and individual information to authenticated users.</p>
@@ -59,5 +61,28 @@ http GET http://directory.olinapps.com/api/people sessionid==<i>&lt;sessionid st
 
 <p><b>Authenticated account:</b> <code><a href="http://directory.olinapps.com/api/me">http://directory.olinapps.com/api/me</a></code></p>
 <p><b>List all people:</b> <code><a href="http://directory.olinapps.com/api/people">http://directory.olinapps.com/api/people</a></code></p>
+
+<hr>
+
+<h2>Mailing List API</h2>
+
+<p>Olin Apps currently indexes the entire history of the mailing lists <code>helpme</code> and <code>carpediem</code>.</p>
+
+<p>Each of these requests if done from an external program should include a <code>?sessionid=</code> parameter. Go to <a href="/api/sessionid">/api/sessionid</a> to see your Session ID. When you log out of <a href="/">olinapps.com</a>, your Session ID is reset.</p>
+
+<ul>
+  <li>
+    <a href="http://lists.olinapps.com/api/lists/helpme?text=helpyou"><code>http://lists.olinapps.com/api/lists/[list name]?sessionid=...&text=[some text to search for]</code></a>
+    <br>This returns a JSON object with an "urls" property, each a link to a batched JSON list of messages (50 each). The IDs are definitely not in Date order, despite their appearance.
+  </li>
+  <li>
+    <a href="http://lists.olinapps.com/api/messages?ids=55927,74429,74531,74536,74537,74663,74743,74818,74834,75057,75182,75214,75252,75254,75292,75380,75476,75512,75746,75747"><code>http://lists.olinapps.com/api/messages?ids=[comma separated list of mail ids]&sessionid=...</code></a>
+    <br>Return the content for a set of messages.
+  </li>
+  <li>
+    <a href="http://lists.olinapps.com/api/lists/helpme/archive"><code>http://lists.olinapps.com/api/lists/[list name]/archive?sessionid=...</code></a>
+    <br>Download the entire archive for a mailing list. <b>Don't use this endpoint too often.</b> Please download and cache the contents if you want to analyze an entire mailing list.
+  </li>
+</ul>
 
 {% endblock %}
