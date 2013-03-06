@@ -77,8 +77,7 @@ function ensureUser (email, next) {
         created: Date.now(),
         sessionid: null
       };
-      db.users.save(user, function (err, user) {
-        console.log(err, user);
+      db.users.save(user, function (err) {
         next(err, user);
       })
     }
