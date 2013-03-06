@@ -108,13 +108,13 @@ function ensureUser (email, next) {
 function generateSession (req, user, next) {
   if (user.sessionid) {
     req.session.sessionid = user.sessionid;
-    next(null, user.sessionid);
+    next(null, req.session.sessionid);
   } else {
     req.session.sessionid = user.sessionid = String(uuid.v1());
     db.users.update({
       _id: user._id
     }, user, function (err) {
-      next(err, user);
+      next(err, req.session.sessionid);
     })
   }
 }
@@ -377,7 +377,7 @@ function apiNetworkLogin (req, res) {
       } else {
         var email = json.mailbox.emailAddress.toLowerCase();
         ensureUser(email, function (err, user) {
-          generateSession(req, user, function (err, sessionid) {
+          generateSession(req, user, function (err, user) {
             res.json({
               error: false,
               sessionid: sessionid,
