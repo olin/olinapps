@@ -85,26 +85,6 @@ function ensureUser (email, next) {
   });
 }
 
-// def ensure_user(email):
-//   email = email.lower()
-//   try:
-//     user = db.users.find_one({
-//       "_id": email_local_part(email)
-//       })
-//     if not user:
-//       user = {
-//         "_id": email_local_part(email),
-//         "domain": email_domain_part(email),
-//         "password": None,
-//         "created": int(time.time()),
-//         "resettoken": None,
-//         "session": None
-//         }
-//       db.users.insert(user)
-//     return user
-//   except Exception:
-//     return None
-
 function generateSession (req, user, next) {
   if (user.sessionid) {
     req.session.sessionid = user.sessionid;
@@ -118,14 +98,6 @@ function generateSession (req, user, next) {
     })
   }
 }
-
-// def generate_session(user):
-//   # Session ID.
-//   if not user.get('sessionid'):
-//     user['sessionid'] = str(uuid.uuid1())
-//     db.users.update({"_id": user['_id']}, user)
-//   session['sessionid'] = user['sessionid']
-//   return user['sessionid']
 
 function getSessionUser (req, next) {
   console.log(req.query.sessionid);
@@ -147,17 +119,10 @@ function getSessionUser (req, next) {
   }
 }
 
-// def get_session_user():
-//   if 'sessionid' not in session and not request.args.get('sessionid'):
-//     return None
-//   return db.users.find_one({
-//     "sessionid": session.get('sessionid') or request.args.get('sessionid')
-//     })
-
 function jsonifyUser (user) {
   return {
     domain: user.domain,
-    id: user.id,
+    id: user._id,
     created: user.created
   };
 }
@@ -191,19 +156,7 @@ app.get('/api/me', function (req, res) {
       res.json({error: false, user: jsonifyUser(user)});
     }
   });
-})
-
-// @app.route('/api/me')
-// def route_api_me():
-//   user = get_session_user()
-//   if user:
-//     return jsonify(error=False, user={
-//       "domain": user['domain'],
-//       "id": user['_id'],
-//       "created": user['created']
-//       })
-//   else:
-//     return jsonify(error=True)
+});
 
 app.get('/api/sessionid', function (req, res) {
   getSessionUser(req, function (err, user) {
@@ -213,15 +166,7 @@ app.get('/api/sessionid', function (req, res) {
       res.json({error: false, sessionid: user.sessionid});
     }
   });
-})
-
-// @app.route('/api/sessionid')
-// def route_api_sessionid():
-//   user = get_session_user()
-//   if user:
-//     return jsonify(error=False, sessionid=user['sessionid'])
-//   else:
-//     return jsonify(error=True)
+});
 
 app.get('/external', function (req, res) {
   getSessionUser(req, function (err, user) {
@@ -236,19 +181,7 @@ app.get('/external', function (req, res) {
       });
     }
   });
-})
-
-// @app.route('/external')
-// def route_external():
-//   user = get_session_user()
-//   if user:
-//     return render_template('external.html',
-//       external=request.args.get('callback'),
-//       domain=urlparse(request.args.get('callback', '')).netloc,
-//       sessionid=session['sessionid'],
-//       user=user)
-//   else:
-//     return redirect('/login?external=%s' % request.args.get('callback'))
+});
 
 app.get('/login', function (req, res) {
   getSessionUser(req, function (err, user) {
@@ -266,7 +199,7 @@ app.get('/login', function (req, res) {
       user: user
     });
   });
-})
+});
 
 app.post('/login', function (req, res) {
   if (req.body.username && req.body.password) {
@@ -300,54 +233,6 @@ app.post('/login', function (req, res) {
   }
 });
 
-// @app.route('/login', methods=['GET', 'POST'])
-// def route_login():
-//   if request.method == 'GET':
-//     user = get_session_user()
-//     return render_template('login.html',
-//       external=request.args.get('external'),
-//       domain=urlparse(request.args.get('external')).netloc if request.args.get('external') else None,
-//       user=user)
-//   # Normalize username.
-//   else:
-//     username = request.form.get('email')
-//     if not username:
-//       return render_template('login.html',
-//         external=request.args.get('external'),
-//         domain=urlparse(request.args.get('external')).netloc if request.args.get('external') else None,
-//         message="Please enter an email address.")
-
-//   # Check for canonical emails.
-//   if email_domain_part(username) not in ['olin.edu', 'students.olin.edu', 'alumni.olin.edu']:
-//     return render_template('login.html',
-//       external=request.args.get('external'),
-//       domain=urlparse(request.args.get('external')).netloc if request.args.get('external') else None,
-//       message="Not a valid olin.edu email address.",
-//       email=username)
-
-//   # Lookup user.
-//   user = ensure_user(username)
-
-//   # Reset or match password.
-//   # if not user['password']:
-//   #   reset_password(user)
-//   #   return render_template('reset_sent.html')
-//   if not user['password'] or not match_password(request.form.get('password'), user['password']):
-//     return render_template('login.html',
-//       external=request.args.get('external'),
-//       domain=urlparse(request.args.get('external')).netloc if request.args.get('external') else None,
-//       message="No such user or invalid password. If you are trying to create an Olin Apps account, <a href=\"/reset?create\">click here</a>.",
-//       email=username)
-
-//   generate_session(user)
-
-//   #if request.args.get('callback') and 'external' in request.args:
-//   #  return redirect(request.args.get('callback') + '?sessionid=' + session['sessionid'])
-
-//   if request.args.get('external'):
-//     return redirect('/external?callback=%s' % request.args.get('external'))
-//   return redirect('/')
-
 app.post('/logout', function (req, res) {
   getSessionUser(req, function (err, user) {
     delete req.session.sessionid;
@@ -363,15 +248,6 @@ app.post('/logout', function (req, res) {
     }
   });
 });
-
-// @app.route('/logout', methods=['POST'])
-// def route_logout():
-//   user = get_session_user()
-//   if user:
-//     user.pop('sessionid', None)
-//     db.users.update({"_id": user['_id']}, user)
-//   session.pop('sessionid', None)
-//   return redirect('/')
 
 function apiNetworkLogin (req, res) {
   if (req.body.username && req.body.password) {
