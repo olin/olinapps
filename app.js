@@ -131,6 +131,10 @@ function getSessionUser (req, next) {
   if (!req.session.sessionid && !req.query.sessionid) {
     next(null, null);
   } else {
+    // Normalize from query parameter or session.
+    req.session.sessionid = req.session.sessionid || req.query.sessionid;
+
+    // Find user.
     db.users.findOne({
       sessionid: req.session.sessionid
     }, next);
@@ -242,6 +246,14 @@ app.get('/external', function (req, res) {
 
 app.get('/login', function (req, res) {
   getSessionUser(req, function (err, user) {
+    if (user) {
+      if (req.query.external) {
+        return res.redirect('/external?callback=' + req.query.external);
+      } else {
+        return res.redirect('/');
+      }
+    }
+
     res.render('login.html', {
       external: req.query.external,
       domain: req.query.external && require('url').parse(req.query.external).hostname,
@@ -264,11 +276,11 @@ app.post('/login', function (req, res) {
         var email = json.mailbox.emailAddress.toLowerCase();
         ensureUser(email, function (err, user) {
           generateSession(req, user, function (err, sessionid) {
-            // Finished logging in, now redirection.
+            // Finished logging in, now redirect back to non HTTPS domain.
             if (req.query.external) {
-              res.redirect('http://olinapps.com/external?sessionid=' + sessionid + '&callback=' + req.query.external);
+              res.redirect('http://olinapps.com/login?sessionid=' + sessionid + '&external=' + req.query.external);
             } else {
-              res.redirect('http://olinapps.com/?sessionid=' + sessionid);
+              res.redirect('http://olinapps.com/login?sessionid=' + sessionid);
             }
           })
         });
@@ -282,7 +294,7 @@ app.post('/login', function (req, res) {
       message: 'Please enter a username and password.'
     });
   }
-})
+});
 
 // @app.route('/login', methods=['GET', 'POST'])
 // def route_login():
