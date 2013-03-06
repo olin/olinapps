@@ -128,6 +128,7 @@ function generateSession (req, user, next) {
 //   return user['sessionid']
 
 function getSessionUser (req, next) {
+  console.log(req.query.sessionid);
   if (!req.session.sessionid && !req.query.sessionid) {
     next(null, null);
   } else {
@@ -137,7 +138,12 @@ function getSessionUser (req, next) {
     // Find user.
     db.users.findOne({
       sessionid: req.session.sessionid
-    }, next);
+    }, function (err, user) {
+      if (!user) {
+        delete req.session.sessionid;
+      }
+      next(err, user);
+    });
   }
 }
 
@@ -269,7 +275,6 @@ app.post('/login', function (req, res) {
         res.render('login.html', {
           external: req.query.external,
           domain: req.query.external && require('url').parse(req.query.external).hostname,
-          user: user,
           message: 'Your credentials were invalid. Please try again.'
         });
       } else {
@@ -290,7 +295,6 @@ app.post('/login', function (req, res) {
     res.render('login.html', {
       external: req.query.external,
       domain: req.query.external && require('url').parse(req.query.external).hostname,
-      user: user,
       message: 'Please enter a username and password.'
     });
   }

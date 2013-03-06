@@ -6,7 +6,7 @@
   <p class="muted">Log in with your Olin network credentials. Your username is your first initial, followed by your last name, e.g. <em>pmiller</em>. Don't include "MILKYWAY\" in your user name.</p>
 
   {% if message %}
-  <div class="alert alert-error">{{ message|safe }}</div>
+  <div class="alert alert-error">{{ message }}</div>
   {% endif %}
 
   <form action="https://olinapps.herokuapp.com/login{% if external %}?external={{ external }}{% endif %}" method="post"
