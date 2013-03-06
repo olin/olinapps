@@ -1,0 +1,63 @@
+{% extends "layout.html" %}
+{% block body %}
+
+  <h2>Authentication API</h2>
+
+  <p>Users on Olin Apps are uniquely identified by the local part of their email address. For example, <code>president.miller@students.olin.edu</code> would be uniquely identified as <code>president.miller</code>. This is given as the <code>"id"</code> parameter in the authentications below.</p>
+
+  <p>To authenticate users on Olin Apps requires a unique session key. There are two ways to do this:</p>
+
+<ol type="a">
+  <li>
+  <p><b>Web apps:</b> Redirect the user to</p>
+  <pre><a href="http://olinapps.com/external?callback=http://example.com/">http://olinapps.com/external?callback=<i>http://example.com/</i></a></pre>
+  <p>If the user approves the app, they are returned to the callback URL with a <code>POST</code> request; its form value <code>sessionid</code> will be a unique session key that can be used to acess the API. Save this and access <code>/api/me</code> (see below) to find out the user's identiy. If the user rejects the app, they are sent back to the callback URL via a <code>GET</code> request with no sessionid.</p>
+</li>
+
+<li>
+  <p><b>Native/mobile apps:</b> Send a POST request to</p>
+  <pre><a href="https://olinapps.herokuapp.com/api/exchangelogin">https://olinapps.herokuapp.com/api/exchangelogin</a></pre>
+  <p>Include the form values <code>username</code> and <code>password</code> containing the user's network credentials (don't include the <code>MILKYWAY\</code>). The server will respond with an error code of 401 if invalid, or 200 and a JSON body:</p>
+  <pre>{
+  "sessionid": "<em>&lt;unique-uuid-key&gt;</em>",
+  "user": {
+    "created": 1384484848483,
+    "id": "first.last",
+    "domain": "<i>example</i>.olin.edu"
+  }
+}</pre>
+  <p>The <code>"id"</code> field is the unique identifier for this user, i.e. you should use this string to associate information with a unique student or faculty. The <code>"created"</code> field is the time the account was created.</p>
+</li></ol>
+    
+  </ol>
+
+  <h3>User and Session Information</h3>
+  <p>Once authenticated, you can send a GET request from your server to</p>
+  <pre><a href="http://olinapps.com/api/me">http://olinapps.com/me?sessionid=<em>&lt;unique-session-key&gt;</em></a></pre>
+  <p>This returns the user's information in JSON, and also checks that your session key is still valid. If the session key has become invalid (for example, the user has logged out) this method returns an error code of 401.</a>
+
+  <p><em>Once authenticated, you can use other Olin Apps APIs such as the <a href="http://directory.olinapps.com/api">Directory API</a>.</em></p>
+
+  <h3>Testing</h3>
+  <p>First install <a href="https://github.com/jkbr/httpie">httpie</a>. Run the following command to obtain a <code>sessionid</code>:</p>
+
+  <pre>http -fv POST https://olinapps.herokuapp.com/api/exchangelogin username=<i>&lt;your username&gt;</i> password=<i>&lt;your password&gt;</i></pre>
+
+  <p>Then attempt to access a protected resource:</p>
+
+  <pre>http GET http://olinapps.com/api/me sessionid==<i>&lt;sessionid string&gt;</i>
+http GET http://directory.olinapps.com/api/people sessionid==<i>&lt;sessionid string&gt;</i></pre>
+
+<h2>Directory API</h2>
+
+<p>The directory API provides pictures and individual information to authenticated users.</p>
+
+<ol>
+  <li> Authenticate using the above Authentication API.</li>
+  <li>Include ?sessionid=<unique-session-ey> onto each URL call below.</li>
+</ol>
+
+<p><b>Authenticated account:</b> <code><a href="http://directory.olinapps.com/api/me">http://directory.olinapps.com/api/me</a></code></p>
+<p><b>List all people:</b> <code><a href="http://directory.olinapps.com/api/people">http://directory.olinapps.com/api/people</a></code></p>
+
+{% endblock %}

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>Olin Apps</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <link href="/static/bootstrap/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/bootstrap/bootstrap-responsive.min.css" rel="stylesheet">
+    <link href="/static/style.css" rel="stylesheet">
+  </head>
+  <body class="slim">
+    <header class="olinstar">
+      <ul>
+        <li class="projects"><a href="//olinprojects.com/">olin<b>projects</b>.com</a></li>
+        <li class="students"><a href="//olinstudents.com/">olin<b>students</b>.com</a></li>
+        <li class="clubs"><a href="//olinclubs.com/">olin<b>clubs</b>.com</a></li>
+        <li class="apps"><a href="//olinapps.com/">olin<b>apps</b>.com</a></li>
+      </ul>
+    </header>
+
+    <div class="container-fluid">
+
+      {% if user %}
+        <div id="login">Logged in as <code>{{user._id}}</code>.
+          <form action="/logout" method="post">
+            <button class="btn btn-danger btn-mini">Logout</button>
+          </form>
+        </div>
+      {% else %}
+        <div id="login">
+          <a href="/login" class="btn btn-success btn-mini">Login to Olin Apps</a>
+          <span style="margin: 0 8px; font-size: 10px">or</span>
+          <a href="/reset?create" class="btn btn-info btn-mini">Create your Account</a>
+        </div>
+      {% endif %}
+      <h1><a href="/">Olin Apps</a>.com</h1>
+      <div id="body">
+        {% block body %}{% endblock %}
+      </div>
+    </div>
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-36936766-1']);
+  _gaq.push(['_setDomainName', 'olinapps.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+  </body>
+</html>
