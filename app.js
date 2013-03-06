@@ -344,6 +344,22 @@ app.post('/login', function (req, res) {
 //     return redirect('/external?callback=%s' % request.args.get('external'))
 //   return redirect('/')
 
+app.post('/logout', function (req, res) {
+  getSessionUser(req, function (err, user) {
+    delete req.session.sessionid;
+    if (user) {
+      delete user.sessionid;
+      db.users.update({
+        _id: user._id
+      }, user, function () {
+        res.redirect('/');
+      })
+    } else {
+      res.redirect('/');
+    }
+  });
+});
+
 // @app.route('/logout', methods=['POST'])
 // def route_logout():
 //   user = get_session_user()
