@@ -266,9 +266,9 @@ app.post('/login', function (req, res) {
           generateSession(req, user, function (err, sessionid) {
             // Finished logging in, now redirection.
             if (req.query.external) {
-              res.redirect('http://olinapps.com/external?callback=' + req.query.external);
+              res.redirect('http://olinapps.com/external?sessionid=' + sessionid + '&callback=' + req.query.external);
             } else {
-              res.redirect('http://olinapps.com/');
+              res.redirect('http://olinapps.com/?sessionid=' + sessionid);
             }
           })
         });
