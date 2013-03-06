@@ -229,8 +229,8 @@ app.get('/external', function (req, res) {
       res.redirect('/login?external=' + req.query.callback);
     } else {
       res.render('external.html', {
-        external: req.query.external,
-        domain: req.query.external && require('url').parse(req.query.external).hostname,
+        external: req.query.callback,
+        domain: req.query.callback && require('url').parse(req.query.callback).hostname,
         user: user,
         sessionid: user.sessionid
       });
