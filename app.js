@@ -99,7 +99,7 @@ function generateSession (req, user, next) {
 }
 
 function getSessionUser (req, next) {
-  console.log(req.query.sessionid);
+  console.log('IDs', req.query.sessionid, req.session.sessionid);
   if (!req.session.sessionid && !req.query.sessionid) {
     next(null, null);
   } else {
