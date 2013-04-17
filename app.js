@@ -104,7 +104,7 @@ function getSessionUser (req, next) {
     next(null, null);
   } else {
     // Normalize from query parameter or session.
-    req.session.sessionid = req.session.sessionid || req.query.sessionid;
+    req.session.sessionid = req.query.sessionid || req.session.sessionid;
 
     // Find user.
     db.users.findOne({
