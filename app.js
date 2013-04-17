@@ -259,7 +259,7 @@ function apiNetworkLogin (req, res) {
           generateSession(req, user, function (err, user) {
             res.json({
               error: false,
-              sessionid: sessionid,
+              sessionid: user.sessionid,
               user: jsonifyUser(user)
             });
           })
