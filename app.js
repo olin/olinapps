@@ -256,10 +256,10 @@ function apiNetworkLogin (req, res) {
       } else {
         var email = json.mailbox.emailAddress.toLowerCase();
         ensureUser(email, function (err, user) {
-          generateSession(req, user, function (err, user) {
+          generateSession(req, user, function (err, sessionid) {
             res.json({
               error: false,
-              sessionid: user.sessionid,
+              sessionid: sessionid,
               user: jsonifyUser(user)
             });
           })
