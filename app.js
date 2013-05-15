@@ -10,6 +10,7 @@ var express = require('express')
   , MongoStore = require('connect-mongo')(express)
   , nunjucks = require('nunjucks')
   , olin = require('olin')
+  , rem = require('rem')
   , uuid = require('uuid');
 
 var app = express(), db;
@@ -202,27 +203,38 @@ app.get('/login', function (req, res) {
 
 app.post('/login', function (req, res) {
   if (req.body.username && req.body.password) {
-    olin.networkLogin(req.body.username, req.body.password, function (err, json) {
-      if (!json || !json.mailbox || !json.mailbox.emailAddress) {
-        res.render('login.html', {
-          external: req.query.external,
-          domain: req.query.external && require('url').parse(req.query.external).hostname,
-          message: 'Your credentials were invalid. Please try again.'
-        });
-      } else {
-        var email = json.mailbox.emailAddress.toLowerCase();
-        ensureUser(email, function (err, user) {
-          generateSession(req, user, function (err, sessionid) {
-            // Finished logging in, now redirect back to non HTTPS domain.
-            if (req.query.external) {
-              res.redirect('http://olinapps.com/login?sessionid=' + sessionid + '&external=' + req.query.external);
-            } else {
-              res.redirect('http://olinapps.com/login?sessionid=' + sessionid);
-            }
-          })
-        });
-      }
-    });
+    try {
+      rem.json('http://foundry.olin.edu/login.php').post('form', {
+        uid: req.body.username,
+        password: req.body.password,
+      }, function (err, json) {
+        if (err || json.error) {
+          res.render('login.html', {
+            external: req.query.external,
+            domain: req.query.external && require('url').parse(req.query.external).hostname,
+            message: 'Your credentials were invalid. Please try again.'
+          });
+        } else {
+          var email = json.email;
+          ensureUser(email, function (err, user) {
+            generateSession(req, user, function (err, sessionid) {
+              // Finished logging in, now redirect back to non HTTPS domain.
+              if (req.query.external) {
+                res.redirect('http://olinapps.com/login?sessionid=' + sessionid + '&external=' + req.query.external);
+              } else {
+                res.redirect('http://olinapps.com/login?sessionid=' + sessionid);
+              }
+            })
+          });
+        }
+      });
+    } catch (e) {
+      res.render('login.html', {
+        external: req.query.external,
+        domain: req.query.external && require('url').parse(req.query.external).hostname,
+        message: 'Your credentials were invalid. Please try again.'
+      });
+    }
   } else {
     res.render('login.html', {
       external: req.query.external,
