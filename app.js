@@ -205,7 +205,7 @@ app.post('/login', function (req, res) {
   if (req.body.username && req.body.password) {
     try {
       rem.json('http://foundry.olin.edu/login.php').post('form', {
-        uid: req.body.username,
+        username: req.body.username,
         password: req.body.password,
       }, function (err, json) {
         if (err || json.error) {
@@ -235,6 +235,28 @@ app.post('/login', function (req, res) {
         message: 'Your credentials were invalid. Please try again.'
       });
     }
+
+    // olin.networkLogin(req.body.username, req.body.password, function (err, json) {
+    //   if (!json || !json.mailbox || !json.mailbox.emailAddress) {
+    //     res.render('login.html', {
+    //       external: req.query.external,
+    //       domain: req.query.external && require('url').parse(req.query.external).hostname,
+    //       message: 'Your credentials were invalid. Please try again.'
+    //     });
+    //   } else {
+    //     var email = json.mailbox.emailAddress.toLowerCase();
+    //     ensureUser(email, function (err, user) {
+    //       generateSession(req, user, function (err, sessionid) {
+    //         // Finished logging in, now redirect back to non HTTPS domain.
+    //         if (req.query.external) {
+    //           res.redirect('http://olinapps.com/login?sessionid=' + sessionid + '&external=' + req.query.external);
+    //         } else {
+    //           res.redirect('http://olinapps.com/login?sessionid=' + sessionid);
+    //         }
+    //       })
+    //     });
+    //   }
+    // });
   } else {
     res.render('login.html', {
       external: req.query.external,
