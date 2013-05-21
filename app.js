@@ -224,6 +224,7 @@ app.post('/login', function (req, res) {
 
         if (err || json.error) {
           res.render('login.html', {
+            username: req.body.username,
             external: req.query.external,
             domain: req.query.external && require('url').parse(req.query.external).hostname,
             message: 'Your credentials were invalid. Please try again.'
