@@ -109,6 +109,9 @@ function getSessionUser (req, next) {
       if (!user) {
         delete req.session.sessionid;
       }
+      if (user) {
+        user.id = user._id;
+      }
       next(err, user);
     });
   }
@@ -145,26 +148,6 @@ app.get('/api', function (req, res) {
     });
   });
 })
-
-app.get('/api/me', function (req, res) {
-  getSessionUser(req, function (err, user) {
-    if (err || !user) {
-      res.json({error: true, message: 'Not logged in.'}, 404);
-    } else {
-      res.json({error: false, user: jsonifyUser(user)});
-    }
-  });
-});
-
-app.get('/api/sessionid', function (req, res) {
-  getSessionUser(req, function (err, user) {
-    if (err || !user) {
-      res.json({error: true, message: 'Not logged in.'}, 404);
-    } else {
-      res.json({error: false, sessionid: user.sessionid});
-    }
-  });
-});
 
 app.get('/external', function (req, res) {
   getSessionUser(req, function (err, user) {
@@ -230,7 +213,8 @@ app.post('/login', function (req, res) {
             username: req.body.username,
             external: req.query.external,
             domain: req.query.external && require('url').parse(req.query.external).hostname,
-            message: 'Your credentials were invalid. Please try again.'
+            message: 'Your credentials were invalid. Please try again.',
+            user: null
           });
         } else {
           var email = json.email;
@@ -251,7 +235,8 @@ app.post('/login', function (req, res) {
         title: 'Olin Apps',
         external: req.query.external,
         domain: req.query.external && require('url').parse(req.query.external).hostname,
-        message: 'Your credentials were invalid. Please try again.'
+        message: 'Your credentials were invalid. Please try again.',
+        user: null
       });
     }
 
@@ -281,7 +266,8 @@ app.post('/login', function (req, res) {
       title: 'Olin Apps',
       external: req.query.external,
       domain: req.query.external && require('url').parse(req.query.external).hostname,
-      message: 'Please enter a username and password.'
+      message: 'Please enter a username and password.',
+      user: null
     });
   }
 });
@@ -301,6 +287,29 @@ app.all('/logout', function (req, res) {
     }
   });
 });
+
+/* API */
+
+app.get('/api/me', function (req, res) {
+  getSessionUser(req, function (err, user) {
+    if (err || !user) {
+      res.json({error: true, message: 'Not logged in.'}, 404);
+    } else {
+      res.json({error: false, user: jsonifyUser(user)});
+    }
+  });
+});
+
+app.get('/api/sessionid', function (req, res) {
+  getSessionUser(req, function (err, user) {
+    if (err || !user) {
+      res.json({error: true, message: 'Not logged in.'}, 404);
+    } else {
+      res.json({error: false, sessionid: user.sessionid});
+    }
+  });
+});
+
 
 function apiNetworkLogin (req, res) {
   if (req.body.username && req.body.password) {

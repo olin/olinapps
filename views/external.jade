@@ -2,12 +2,12 @@ extends layout
 block content
   div.
     <h2>Login to #{domain}</h2>
-    <p>The application <b><a href="#{external}">#{domain}</a></b> is requesting access to your information.</p>
+    <p>The application <b><a href="#{external}">#{domain}</a></b> would like to log in as you.</p>
 
     <form method="post" class="form-horizontal" action="#{external}">
       <div class="form-actions">
         <input name="sessionid" value="#{sessionid}" type="hidden">
-        <button class="btn btn-success">Allow</button>
+        <button class="btn btn-success">Okay</button>
         <a href="#{external}" class="btn">Cancel</a>
       </div>
     </form>
