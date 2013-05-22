@@ -1,0 +1,42 @@
+extends layout
+block content
+  if !user
+    h2
+      | Login to 
+      if !domain
+        | Olin Apps
+      else
+        a(href=external)= domain
+
+    p.muted
+      | Log in with your Olin network credentials. Your username is your first initial, followed by your last name, e.g. 
+      em pmiller
+      | . Don't include "MILKYWAY\" in your user name.
+    if typeof message != 'undefined'
+      .alert.alert-error=message
+    form.form-horizontal(action='https://olinapps.herokuapp.com/login' + (external ? "?external=" + external : ''), method='post')
+      .control-group
+        label.control-label(for='inputUsername')
+          | Username:
+          small MILKYWAY\
+        .controls
+          input#inputUsername.input-xlarge(name='username', type='text', placeholder='pmiller', value=typeof username != 'undefined' ? username : '')
+          script
+            document.getElementById('inputUsername').focus()
+      .control-group
+        label.control-label(for='inputPassword') Password:
+        .controls
+          input#inputPassword.input-xlarge(name='password', type='password')
+          br
+          small(style='display: block; margin-top: 5px;')
+            a(href='https://pm.olin.edu/pm/user_name.asp?act=reset') Forgot your password?
+      .form-actions
+        button.btn.btn-success Login to Olin Apps
+  else
+    h2 Account
+    p
+      | You are logged in as
+      code= user._id
+      | .
+    form(method='post', action='/logout')
+      button.btn.btn-danger Logout

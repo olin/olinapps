@@ -17,7 +17,6 @@
     "olinapps": "~0.0.3",
     "connect-mongo": "~0.3.2",
     "olin": "~0.0.2",
-    "nunjucks": "~0.1.8a",
     "uuid": "~1.4.0",
     "rem": "~0.6.6-1"
   }

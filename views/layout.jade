@@ -1,0 +1,131 @@
+!!! 5
+html
+  head
+    title= title
+    meta(name="viewport", content="width=device-width, initial-scale=1, maximum-scale=1")
+
+    // JQuery
+    script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js')
+
+    // Custom code
+    script(src='/javascripts/script.js')
+
+    // Bootstrap
+    link(href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/css/bootstrap-combined.min.css", rel="stylesheet")
+    script(src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js")
+
+    // Bootstrap lightbox
+    link(href="http://jbutz.github.io/bootstrap-lightbox/assets/css/bootstrap-lightbox.min.css", rel="stylesheet")
+    script(src="http://jbutz.github.io/bootstrap-lightbox/assets/js/bootstrap-lightbox.min.js")
+
+    // Fitvids
+    script(src="http://fitvidsjs.com/js/jquery.fitvids.js")
+
+    // Chosen extension
+    link(href="http://harvesthq.github.io/chosen/chosen/chosen.css", rel="stylesheet")
+    script(src="http://harvesthq.github.io/chosen/chosen/chosen.jquery.js")
+
+    // Fonts
+    link(href='http://fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700', rel='stylesheet', type='text/css')
+
+
+    style
+      body { padding-bottom: 60px; }
+      
+      @media (max-width: 767px) {
+        body { padding: 0; }
+        #content { padding: 0 20px; }
+      }
+
+      #content { max-width: 800px; margin-left: auto; margin-right: auto; }
+
+      #projects, #projects > li { display: block; margin: 0; padding: 0; }
+      #projects > li { background: white; margin-bottom: 50px; }
+
+      .project-title { margin: 32px 0 8px; font-size: 34px; }
+      /*.project-small .project-title { font-size: 26px; margin-top: 25px; margin-bottom: 5px; }*/
+      .project-title a { display: block; }
+      .project-title { position: relative; }
+      .project-private .project-title a { background: #eee; }
+      .project-title a:hover { background: #ff6; }
+      .project-link { border: 2px solid #afa; margin: 10px 0; padding: 10px 20px 0; }
+      .project-link:hover { background: #cfc; cursor: pointer; }
+      .project-link {
+        white-space: pre;           /* CSS 2.0 */
+        white-space: pre-wrap;      /* CSS 2.1 */
+        white-space: pre-line;      /* CSS 3.0 */
+        white-space: -pre-wrap;     /* Opera 4-6 */
+        white-space: -o-pre-wrap;   /* Opera 7 */
+        white-space: -moz-pre-wrap; /* Mozilla */
+        white-space: -hp-pre-wrap;  /* HP Printers */
+        word-wrap: break-word;      /* IE 5+ */
+        }
+
+      .project-subtitle { margin-top: -5px; font-size: 16px; color: #666; margin-bottom: 25px;}
+
+      .project-video { outline: 1px solid #aaa; background: #ccc; }
+      .project-video iframe { display: block; margin-left: auto; margin-right: auto; }
+      .project-video, .project-video iframe { max-height: 450px; overflow: hidden; }
+
+      .project-images { overflow: auto; }
+      .project-image { text-align: center; outline: 1px solid #aaa; background: #ccc; margin-top: 10px; display: block; }
+      .project-image-table { display: table; height: 100%; margin: 0 auto; }
+      .project-image-cell { display: table-cell; text-align: center; vertical-align: middle; }
+      .project-image img { display: block; margin: 0 auto; }
+
+      @media (min-width: 940px) {
+        #projects .project-title::before { content: attr(data-year); position: absolute; right: 102%; font-size: 22px; color: #bbb; }
+      }
+
+      @media (min-width: 500px) {
+        .project-images { display: table; width: 100%; }
+        .project-images-cell { display: table-cell; text-align: center; }
+        .project-image { height: 150px; width: 150px; margin-right: 10px; display: inline-block; }
+      }
+
+      .project-body { padding: 0 20px; }
+      .project-body p { font-family: "Open Sans", Helvetica, Arial, sans-serif; }
+      .project-body { margin: 25px 0 15px; font-size: 16px; line-height: 1.5; }
+      .project-body h2 { margin-top: 25px; }
+      .project-body img { display: block; margin: 20px auto 0; max-width: 100%; max-height: 400px; }
+      .project-body a img { border: 4px solid #9bc; }
+      .project-body .img-caption { text-align: center; display: block; margin: 5px 20% 30px; font-size: 14px; font-style: italic; text-decoration: none; }
+
+      .project-footer { font-size: 12px; border-top: 1px solid #ddd; padding-top: 5px; color: #888;
+      margin: 30px 0 40px; }
+
+      .fb-comments, .fb-comments > span, .fb-comments iframe[style] {width: 100% !important;}
+      @media (max-width: 499px) {
+        .fb-comments, .fb-comments > span, .fb-comments iframe[style] { display: none !important; }
+      }
+
+    script
+      $(function () {
+        $('.project-link').on('click', function (e) {
+          window.location.href = $(this).find('a').prop('href');
+        })
+        $(".project-video").fitVids();
+        $(".chzn-select").chosen();
+        $('.project-body img').each(function () {
+          $(this).wrap($('<a>').attr('href', $(this).prop('src')).css('max-width', '500px'));
+          $('<span>').insertAfter(this).text($(this).prop('alt')).addClass('img-caption');
+        })
+        $('.project-body table').addClass('table').addClass('table-striped');
+      })
+
+  body
+    div#fb-root
+    script
+      (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=190940974391566";
+        fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
+
+    self = 'apps'
+    include brand
+
+    #content.container-fluid
+      block content

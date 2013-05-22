@@ -8,16 +8,11 @@ var express = require('express')
   , path = require('path')
   , mongojs = require('mongojs')
   , MongoStore = require('connect-mongo')(express)
-  , nunjucks = require('nunjucks')
   , olin = require('olin')
   , rem = require('rem')
   , uuid = require('uuid');
 
 var app = express(), db;
-
-var env = new nunjucks.Environment(new nunjucks.FileSystemLoader('views'));
-
-env.express(app);
 
 app.configure(function () {
   db = mongojs(process.env.MONGOLAB_URI || 'olinapps', ['users']);
@@ -133,7 +128,9 @@ function jsonifyUser (user) {
 
 app.get('/', function (req, res) {
   getSessionUser(req, function (err, user) {
-    res.render('index.html', {
+    console.log(err, user);
+    res.render('index.jade', {
+      title: 'Olin Apps',
       external: req.query.external,
       user: user
     });
@@ -142,7 +139,8 @@ app.get('/', function (req, res) {
 
 app.get('/api', function (req, res) {
   getSessionUser(req, function (err, user) {
-    res.render('api.html', {
+    res.render('api.jade', {
+      title: 'Olin Apps',
       user: user
     });
   });
@@ -173,7 +171,8 @@ app.get('/external', function (req, res) {
     if (err || !user) {
       res.redirect('/login?external=' + req.query.callback);
     } else {
-      res.render('external.html', {
+      res.render('external.jade', {
+        title: 'Olin Apps',
         external: req.query.callback,
         domain: req.query.callback && require('url').parse(req.query.callback).hostname,
         user: user,
@@ -193,13 +192,16 @@ app.get('/login', function (req, res) {
       }
     }
 
-    res.render('login.html', {
+    res.render('login.jade', {
+      title: 'Olin Apps',
       external: req.query.external,
       domain: req.query.external && require('url').parse(req.query.external).hostname,
       user: user
     });
   });
 });
+
+/* POST */
 
 app.post('/login', function (req, res) {
   if (req.body.username && req.body.password) {
@@ -223,7 +225,8 @@ app.post('/login', function (req, res) {
         }
 
         if (err || json.error) {
-          res.render('login.html', {
+          res.render('login.jade', {
+            title: 'Olin Apps',
             username: req.body.username,
             external: req.query.external,
             domain: req.query.external && require('url').parse(req.query.external).hostname,
@@ -244,7 +247,8 @@ app.post('/login', function (req, res) {
         }
       });
     } catch (e) {
-      res.render('login.html', {
+      res.render('login.jade', {
+        title: 'Olin Apps',
         external: req.query.external,
         domain: req.query.external && require('url').parse(req.query.external).hostname,
         message: 'Your credentials were invalid. Please try again.'
@@ -253,7 +257,7 @@ app.post('/login', function (req, res) {
 
     // olin.networkLogin(req.body.username, req.body.password, function (err, json) {
     //   if (!json || !json.mailbox || !json.mailbox.emailAddress) {
-    //     res.render('login.html', {
+    //     res.render('login.jade', {
     //       external: req.query.external,
     //       domain: req.query.external && require('url').parse(req.query.external).hostname,
     //       message: 'Your credentials were invalid. Please try again.'
@@ -273,7 +277,8 @@ app.post('/login', function (req, res) {
     //   }
     // });
   } else {
-    res.render('login.html', {
+    res.render('login.jade', {
+      title: 'Olin Apps',
       external: req.query.external,
       domain: req.query.external && require('url').parse(req.query.external).hostname,
       message: 'Please enter a username and password.'
@@ -281,7 +286,7 @@ app.post('/login', function (req, res) {
   }
 });
 
-app.post('/logout', function (req, res) {
+app.all('/logout', function (req, res) {
   getSessionUser(req, function (err, user) {
     delete req.session.sessionid;
     if (user) {
