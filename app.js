@@ -140,6 +140,10 @@ app.get('/', function (req, res) {
   })
 })
 
+app.get('/authenticate', function (req, res) {
+  res.redirect('/login');
+})
+
 app.get('/api', function (req, res) {
   getSessionUser(req, function (err, user) {
     res.render('api.jade', {
