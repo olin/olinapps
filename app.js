@@ -41,7 +41,7 @@ app.configure('development', function () {
 });
 
 app.configure('production', function () {
-  app.set('host', 'quotes.olinapps.com');
+  app.set('host', 'www.olinapps.com');
 });
 
 /**
