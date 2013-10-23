@@ -53,6 +53,8 @@ block person_list
         block person
 
 block content
+  style#search_style.
+
   script.
     $(function () {
       var list = $('.lazyload').toArray(), section = list.length / 8;
@@ -66,6 +68,51 @@ block content
       }
       lazyload();
       setInterval(lazyload, 1000);
+
+      var ANIM_SPEED = 'fast';
+
+      // Cache links list.
+      $('#person-list div.person').each(function () {
+        $(this).attr('data-index', $('h3', this).text().toLowerCase() + ' ' + String($('h3', this).attr('title')).toLowerCase());
+      });
+
+      // Filter lists based on a keywords array.
+      function filterList(keywords) {
+        // When filtering, hide headers.
+        keywords.length ? $('.container-fluid h2').hide(ANIM_SPEED) : $('.container-fluid h2').show(ANIM_SPEED);
+
+        // If there are no keywords, show all links.
+        // http://redotheweb.com/2013/05/15/client-side-full-text-search-in-css.html
+        if (!keywords.length) {
+          //- for (var keys in links) {
+          //-   links[keys].style.display = 'block';
+          //- }
+          $('#search_style').html('');
+          $('.row-temp').addClass('row-fluid');
+          $('.triplet-temp').addClass('span4');
+        } else {
+          $('#search_style').html(".person:not(" + keywords.map(function (key) {
+            return "[data-index*=\"" + key.toLowerCase() + "\"]";
+          }).join('') + ") { display: none; }");
+          $('.row-fluid').addClass('row-temp').removeClass('row-fluid');
+          $('.span4').addClass('triplet-temp').removeClass('span4');
+        }
+      }
+
+      // Keyup filter.
+      $('#filter-input').on('keyup', function () {
+        // Filter keywords
+        console.log(keywords);
+        var keywords = $.grep($('#filter-input').val().toLowerCase().split(/\s+/), $.trim);
+        filterList(keywords);
+      });
+
+      if (!isMobile) {
+        $('#filter-input').focus();
+      }
+      
+      // Filter initially so we update shortcut link.
+      filterList([]);
     })
 
   style.
@@ -127,7 +174,7 @@ block content
       h2(style="padding-top: 0") Current students
       each year in studentyears
         - var people = directory.filter(function (p) { return p.domain == 'students.olin.edu' && p.year == year});
-        h3 Class of #{year} (#{people.length} people)
+        h2(style="color: #777; font-size: 1.2em;") Class of #{year} (#{people.length} people)
         block person_list
 
       - var people = directory.filter(function (p) { return p.domain == 'alumni.olin.edu' });
