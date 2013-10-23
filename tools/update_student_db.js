@@ -2,9 +2,14 @@
 
 var olin = require('olin');
 var async = require('async');
+var mongojs = require('mongojs');
+
+var DRY = true;
+
+var db = mongojs(process.env.MONGOLAB_URI || 'olinapps', ['users']);
 
 if (process.argv.length < 4) {
-  console.error('Usage: populate_student_db.sh yourusername yourpassword');
+  console.error('Usage: node update_student_db.js olinusername olinpassword');
   console.error(' -- Use your network credentials to pull down list of all students.')
   process.exit(1);
 }
@@ -31,16 +36,37 @@ olin.expandDistributionList(process.argv[2], process.argv[3], 'StudentsAll', fun
       list.list.forEach(function (student) {
         // By default, non-year mailing lists (cross-reg students) get assigned
         // the current year.
-        students.push({
+        // Also filter for fake accounts like "crossreg".
+        var student = {
           year: Number((list.year.match(/\d{4}/) || [])[0] || (new Date).getFullYear()),
           name: student.name,
           id: (student.email_address || '').replace(/@.*$/, '').toLowerCase(),
           domain: student.email_address.replace(/^.*?@/, '').toLowerCase()
-        });
+        }
+
+        if (student.id != 'crossreg') {
+          students.push(student);
+        }
       })
     });
 
-    // Now add this list of students to the db.
-    console.log(students);
+    console.log(students) ;
+
+    // Now update this list of students in the db.
+    !DRY && students.forEach(function (student) {
+      // Don't "update" the ID. Set name as "nickname" can override it.
+      var id = student.id;
+      delete student.id;
+      console.log('updating', id, '...');
+      db.users.update({
+        _id: id
+      }, {
+        $set: student
+      }, {
+        upsert: true
+      }, function (err) {
+        console.log('--> updated', id, '=', err || 'OK')
+      })
+    })
   });
 })

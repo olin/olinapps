@@ -1,0 +1,62 @@
+var fs = require('fs');
+
+// Expand express app and helpful functions from parent.
+var self = require('../app')
+  , app = self.app
+  , getSessionUser = self.getSessionUser
+  , db = self.db;
+
+
+/**
+ * Routes
+ */
+
+function getDirectory (next) {
+  db.users.find(function (err, users) {
+    next(err, users && users.map(function (user) {
+      user.id = user._id;
+      user.email = user.id + '@' + user.domain;
+      delete user.sessionid;
+      return user;
+    }));
+  });
+}
+
+
+// Returns current years of students from oldest to newest.
+
+function getStudentYears (directory) {
+  var years = {};
+  directory.forEach(function (student) {
+    if (student.domain != 'students.olin.edu') {
+      return;
+    }
+    if (!student.year) {
+      console.error('INVALID STUDENT in DATABASE:', student.id, 'has year', student.year);
+      return
+    }
+    years[student.year] = true;
+  })
+  return Object.keys(years).map(Number).sort().reverse();
+}
+
+app.get('/directory', function (req, res) {
+  getSessionUser(req, function (err, user) {
+    getDirectory(function (err, directory) {
+      res.render('directory.jade', {
+        title: 'Olin Apps',
+        directory: directory,
+        studentyears: getStudentYears(directory),
+        user: user
+      });
+    })
+  })
+})
+
+app.get('/api/directory', function (req, res) {
+  getSessionUser(req, function (err, user) {
+    getDirectory(function (err, directory) {
+      res.json(directory);
+    })
+  })
+})

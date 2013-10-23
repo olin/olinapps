@@ -49,16 +49,19 @@ app.configure('production', function () {
  * Helpers
  */
 
+
 function emailLocalPart (email) {
   return email.split('@')[0];
 }
+
 
 function emailDomainPart (email) {
   return email.split('@')[1];
 }
 
-var MAILGUN_KEY = process.env.MAILGUN_API_KEY
-  , MAILGUN_URL = "https://api.mailgun.net/v2/olinapps.mailgun.org";
+
+// Ensure a user exists when they first log in.
+// If not, create them.
 
 function ensureUser (email, next) {
   email = email.toLowerCase();
@@ -81,6 +84,10 @@ function ensureUser (email, next) {
   });
 }
 
+
+// Generate session for a user who has logged in,
+// including reusing their old session token.
+
 function generateSession (req, user, next) {
   if (user.sessionid) {
     req.session.sessionid = user.sessionid;
@@ -94,6 +101,9 @@ function generateSession (req, user, next) {
     })
   }
 }
+
+
+// Get user who is logged in from an HTTP request.
 
 function getSessionUser (req, next) {
   console.log('IDs', req.query.sessionid, req.session.sessionid);
@@ -118,12 +128,15 @@ function getSessionUser (req, next) {
   }
 }
 
+
+// Convert a user entry into a nice JSON format.
+
 function jsonifyUser (user) {
-  return {
-    domain: user.domain,
-    id: user._id,
-    created: user.created
-  };
+  user = JSON.parse(JSON.stringify(user));
+  delete user._id;
+  delete user.sessionid;
+  user.email = user.id + '@' + user.domain;
+  return user;
 }
 
 
@@ -133,7 +146,6 @@ function jsonifyUser (user) {
 
 app.get('/', function (req, res) {
   getSessionUser(req, function (err, user) {
-    console.log(err, user);
     res.render('index.jade', {
       title: 'Olin Apps',
       external: req.query.external,
@@ -299,7 +311,10 @@ app.all('/logout', function (req, res) {
   });
 });
 
-/* API */
+
+/**
+ * API
+ */
 
 app.get('/api/me', function (req, res) {
   getSessionUser(req, function (err, user) {
@@ -357,9 +372,11 @@ app.post('/api/exchangelogin', apiNetworkLogin); // deprecated
 // These variables will be needed by our apps.
 exports.app = app;
 exports.getSessionUser = getSessionUser;
+exports.db = db;
 
 // Nothing magical here, just continue adding routes
 // just combine them logically in different files.
+require('./apps/directory');
 require('./apps/dining');
 require('./apps/printers');
 require('./apps/launchpad');

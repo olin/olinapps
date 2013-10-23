@@ -1,0 +1,139 @@
+extends layout
+
+block person
+  .person.span4
+    .person-image
+      img.lazyload(src='', data-src=person.thumbnail || person.avatar || '', style='cursor: pointer', onclick='$(this).parent().parent().find(".bigavatar").attr("src", $(this).parent().parent().find(".bigavatar").attr("data-src")); $(this).parent().next().lightbox();')
+    .lightbox.fade(style='display: none;')
+      .lightbox-content
+        a(href=person.thumbnail || person.avatar)
+          img.bigavatar(data-src=person.thumbnail || person.avatar)
+    .person-inset
+      h3(title=person.name)
+        = person.nickname || person.name
+        if person.year
+          |  (#{person.year})
+      p.description
+        if person.room
+          = person.room
+          br
+        if person.phone
+          a(href='tel:' + person.phone)= person.phone
+          br
+        a(href='mailto:' + (person.preferredemail || person.email), title=person.email)= person.preferredemail || person.email
+        br
+        if person.facebook
+          a(href='http://facebook.com/' + person.facebook)
+            img(src='/static/images/socialmedia/facebook.png')
+        if person.skype
+          a(href='skype:' + person.skype + '?call')
+            img(src='/static/images/socialmedia/skype.png')
+        if person.google
+          a(href='http://profiles.google.com/' + person.google)
+            img(src='/static/images/socialmedia/gplus2.png')
+        if person.twitter
+          a(href='http://twitter.com/' + person.twitter)
+            img(src='/static/images/socialmedia/twitter.png')
+        if person.lastfm
+          a(href='http://last.fm/user/' + person.lastfm)
+            img(src='/static/images/socialmedia/lastfm.png')
+        if person.pinterest
+          a(href='http://pinterest.com/' + person.pinterest)
+            img(src='/static/images/socialmedia/pinterest.png')
+        if person.tumblr
+          a(href='http://' + person.tumblr + '.tumblr.com/')
+            img(src='/static/images/socialmedia/tumblr.png')
+
+block person_list
+  - people.sort(function (a, b) { if (a.name < b.name) return -1; if(a.name > b.name) return 1; return 0; });
+  - for (var i = 0; i < people.length; i++)
+    .row-fluid
+      - for (var j = 0; j < 3 && j + i*3 < people.length; j++)
+        - var person = people[i*3 + j]
+        block person
+
+block content
+  script.
+    $(function () {
+      var list = $('.lazyload').toArray(), section = list.length / 8;
+      function lazyload () {
+        if (list.length) {
+          for (var i = 0; i < section && list.length; i++) {
+            var img = list.shift();
+            img.src = $(img).attr('data-src');
+          }
+        }
+      }
+      lazyload();
+      setInterval(lazyload, 1000);
+    })
+
+  style.
+    #header { margin-bottom: 20px; }
+
+    .container-fluid h2 { clear: both; margin: 0; padding: 15px 0 5px; font-size: 1.3em; line-height: inherit; }
+    #header .header-search { padding: 5px 0 0 5px; vertical-align: baseline; }
+    #quick-link { padding: 3px 0 0 10px; color: #444; font-style: italic }
+    #quick-link-name { font-weight: bold; }
+
+    #app-list, #app-list p { display: block; margin: 0; padding: 0; }
+    #app-list { overflow: auto; }
+    #app-list p { float: left; width: 144px; height: 150px; margin: 1px; text-align: center; }
+    #app-list p a { width: 132px; height: 134px; text-decoration: none; display: block;
+      background: #eee; border: 2px solid #eee; padding: 6px 4px; border: 1px solid #888; cursor: pointer; box-shadow: #aaa 2px 2px 2px;
+      color: black; font-size: 14px;}
+    #app-list p a:hover, #app-list p.first a { background: #fff; border: 2px solid #fa0; padding: 5px 3px;}
+    #app-list p img { display: block; width: 90px; height: 90px; margin: 5px auto 10px; }
+    #footer { font-size: 0.7em; text-align: center; padding: 2em 0 0.5em; line-height: 1.3; }
+
+    #nav, #nav li { display: block; margin: 0; padding: 0; }
+    #nav li { background: #bbb; box-shadow: #222 0 1px 1px; margin: 10px 0; } 
+    #nav a { display: block; padding: 4px 8px; line-height: 24px; }
+    #nav img { width: 24px; margin-right: 10px; }
+
+    #quick-link { padding: 3px 0 0 10px; color: #444; font-style: italic }
+    #quick-link-name { font-weight: bold; }
+
+    #content { margin: 0; padding: 0; max-width: none; }
+    #appheader { border-bottom: 1px solid #999; margin: 0 0 20px; padding: 15px 0 0 20px; background: #eee; overflow: auto; height: 55px; }
+    #appheader h1 { font-size: 30px; float: left; margin: 0 20px 0 0; padding: 0; text-shadow: #fff 1px 1px 0; }
+    #appheader-controls { float: right; margin: 5px 20px 0 0; }
+    #appheader .header-search { padding: 5px 0 0 5px; vertical-align: baseline; }
+
+    #appheader.affix { width: 100%; margin: 0; top: 0; }
+    #appheader.affix #appheader-inner { margin-right: 20px; } }
+
+    #person-list { overflow: auto; padding-bottom: 10px; }
+    #person-list div.person { margin-bottom: 15px; overflow: auto; }
+    #person-list div.person-inset { overflow: auto; box-shadow: #666 1px 1px 1px; background: #eee; padding: 6px 10px; min-height: 111px; }
+    #person-list h3 { margin: 5px 0 10px 0; font-size: 19px; line-height: 1.2; }
+    #person-list p.description { clear: left; margin: 0; font-size: 12px;}
+    #person-list p.description img { width: 20px; margin-top: 8px; }
+
+    .person-image { float: left; width: 100px; max-height: 142px; margin-right: 8px; overflow: hidden; box-shadow: #666 1px 1px 1px; }
+    .person-image img { width: 100px; border: none; }
+    .person-image img[src=''] { height: 100px; background: #bbb; }
+
+  form#appheader.form-search.row(data-spy='affix', data-offset-top='41')
+    #appheader-inner
+      h1 Directory
+      .input-prepend.header-search
+        span.add-on
+          i.icon-search
+        input#filter-input.span3(type='search', placeholder='Filter people...', name='search')
+
+  .container-fluid
+    #person-list
+      h2(style="padding-top: 0") Current students
+      each year in studentyears
+        - var people = directory.filter(function (p) { return p.domain == 'students.olin.edu' && p.year == year});
+        h3 Class of #{year} (#{people.length} people)
+        block person_list
+
+      - var people = directory.filter(function (p) { return p.domain == 'alumni.olin.edu' });
+      h2(style="padding-top: 0") Alumni (#{people.length} people)
+      block person_list
+
+      - var people = directory.filter(function (p) { return p.domain == 'olin.edu' });
+      h2(style="padding-top: 0") Faculty and Staff (#{people.length} people)
+      block person_list
