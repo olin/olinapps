@@ -14,7 +14,7 @@ block content
       | . Don't include "MILKYWAY\" in your user name.
     if typeof message != 'undefined'
       .alert.alert-error=message
-    form.form-horizontal(action='https://olinapps.herokuapp.com/login' + (external ? "?external=" + external : ''), method='post')
+    form.form-horizontal(action='/login' + (external ? "?external=" + external : ''), method='post')
       .control-group
         label.control-label(for='inputUsername')
           | Username:

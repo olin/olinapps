@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+
+<html>
+<link href='http://fonts.googleapis.com/css?family=Molle:400italic' rel='stylesheet' type='text/css'>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<script src="http://code.jquery.com/jquery.min.js"></script>
+<style>
+body { height: 745px; }
+.correct { color: #0c0; }
+h3 { margin: 10px 0 10px; color: blue; }
+h1 { margin: 10px 0 0; font-family: 'Molle', cursive; }
+h2.correct::before { content: "CORRECT!"; display: block; }
+.wrong { color: red; }
+h2.wrong::before { content: "WRONG!"; display: block; }
+h2.correct::after, h2.wrong::after { content: "Click any button to move on."; display: block; font-size: 0.8em; }
+#results { display: none; }
+#guess-buttons button { display: block; }
+html { background: #eee; }
+body { width: 300px; background: #fff; font-family: Helvetica Neue, Helvetica, sans-serif; padding: 15px; margin: 0 auto; text-align: center;}
+p { text-align: center; }
+#guess-buttons { text-align: center; }
+button { font-size: 18px; width: 250px; margin: 0 auto 5px; padding: 5px 0; }
+#guess-form-input { font-size: 24px; width: 90%; }
+
+#options { background: #333; overflow: auto; margin: -15px -15px 0;}
+#options a { color: white; padding: 10px 15px; float: left; font-size: 14px; }
+#options a:hover { background: #777; ;}
+
+body.mode-form #guess-buttons { display: none; }
+body.mode-buttons #guess-form { display: none; }
+
+.crisp {
+    image-rendering: optimizeSpeed;             // Older versions of FF
+    image-rendering: -moz-crisp-edges;          // FF 6.0+
+    image-rendering: -webkit-optimize-contrast; // Webkit
+                                                //  (Safari now, Chrome soon)
+    image-rendering: -o-crisp-edges;            // OS X & Windows Opera (12.02+)
+    image-rendering: optimize-contrast;         // Possible future browsers.
+    -ms-interpolation-mode: nearest-neighbor;   // IE
+}
+</style>
+<script>
+function randomize(arr) {
+  return arr.slice().sort(function () { 
+    return Math.random() - 0.5;
+  });
+}
+
+var done = [], students = [];
+
+var mode = 'buttons';
+
+function updateScore () {
+  $('h3').text(done.length + ' / ' + (done.length + students.length));
+}
+
+function nextStudent () {
+  updateScore();
+  if (!students.length) {
+    alert('GREAT JEORB!!! well aren\'t you a social butterfly');
+    $('img, h2, div').hide();
+  }
+  $('#results').hide();
+
+  var compare = students.pop();
+  $('img').prop('src', 'about:blank').prop('src', compare.avatar || compare.thumbnail).css('max-height', '220')
+  $('h2').text(compare.name);
+
+  // preload next
+  if (students[students.length - 1]) {
+    (new Image()).src = students[students.length - 1].avatar || students[students.length - 1].thumbnail;
+  }
+  
+  // Populate comparison to other peeps.
+  var peeps = randomize([compare].concat(students.slice(0, 4)));
+  $('#guess-buttons').html('');
+  $.each(peeps, function (i, peep) {
+    $('<button>').text(peep.name).appendTo('#guess-buttons').data('peep', peep);
+  })
+
+  function showResults (correct) {
+    $('#results').show()
+    $(this).css('font-weight', 'bold').addClass(correct ? 'correct' : 'wrong');
+    $('#results h2').removeClass('correct').removeClass('wrong').addClass(correct ? 'correct' : 'wrong');
+
+    $('h3').append(mode == 'buttons'
+      ? '<br><small style="font-size: 12px">Click any name to continue</small>'
+      : '<br><small style="font-size: 12px">Hit enter to continue</small>');
+
+    if (correct) {
+      done.push(compare);
+    } else {
+      students.push(compare);
+    }
+    students = randomize(students);
+    updateScore();
+  }
+
+  // Button events.
+  $('#guess-buttons').off('click', 'button');
+  $('#guess-buttons').one('click', 'button', function () {
+    showResults($(this).data('peep') == compare);
+    $('#guess-buttons').one('click', 'button', nextStudent);
+  });
+
+  // Form events
+  $('#guess-form').off('submit');
+  $('#guess-form').one('submit', function () {
+    showResults($('#guess-form-input').val().toLowerCase().replace(/^\s+|\s+$/g, '') == compare.name.replace(/\s+.*$/, '').replace(/^\s+|\s+$/g, '').toLowerCase());
+    $('#guess-form').one('submit', function () {
+      nextStudent();
+      return false;
+    })
+    return false;
+  });
+
+  if (mode == 'form') {
+    $('#guess-form-input').val('').focus();
+  }
+}
+
+$(function () {
+  function test (a) {
+    if ((window.location.search || '').substr(1)) {
+      return a == (window.location.search || '').substr(1);
+    } else {
+      return parseInt(a) >= (new Date).getFullYear();
+    }
+  }
+
+  $('input[name="mode"]').on('click', function () {
+    $('body').removeClass('mode-' + mode);
+    mode = $(this).val();
+    $('body').addClass('mode-' + mode);
+    $('#guess-form-input').text('').focus();
+  })
+
+  $.get('/api/people', function (json, err) {
+    json = json.people.filter(function (a) {
+      return a.email.match(/@students\.olin\.edu/); 
+    })
+    students = randomize(json).filter(function (a) {
+      return (a.avatar || a.thumbnail) && parseInt(a.year) == a.year && test(a.year);
+    });
+    nextStudent();
+  });
+
+  // Make small images big, resize them with nearest-neighbor including
+  // horrible Chrome hacks
+  if ('webkitRequestAnimationFrame' in window) {
+    var canvas = $('<canvas>').appendTo('#imgholder')[0];
+    $('img').on('load', function () {
+      var img = this;
+      $(img).css({position: 'absolute', left: '-1000000px'});
+      canvas.height = img.height*2;
+      canvas.width = img.width*2;
+      var ctx = canvas.getContext("2d");
+      ctx.scale(2, 2);
+      ctx.webkitImageSmoothingEnabled = 
+          ctx.mozImageSmoothingEnabled = false;
+      ctx.fillStyle = ctx.createPattern(img, 'repeat');
+      ctx.fillRect(0, 0, canvas.height, canvas.width);
+    })
+  } else {
+    $('img').on('load', function () {
+      if (this.height < 150) this.height = this.height * 2;
+    })
+  }
+})
+</script>
+<body class="mode-buttons">
+  <div style="text-align: center" id="options">
+    <a href="?">All</a>
+    <a href="?2014">2014</a>
+    <a href="?2015">2015</a>
+    <a href="?2016">2016</a>
+    <a href="?2017">2017</a>
+  </div>
+
+  <h1>Guess the Oliner</h1>
+  <h3></h3>
+
+  <div id="imgholder"><img class="crisp"></div>
+  <!--<p style="text-align: center; font-size: 10px">(Update your picture on <a href="http://directory.olinapps.com/">Olin Directory!)</a></p>-->
+
+  <p style="font-size: 10px;">
+    <label><input type="radio" name="mode" value="buttons" checked> Multiple Choice</label>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <label><input type="radio" name="mode" value="form"> Enter First Name</label>
+  </p>
+  
+  <div id="guess-buttons">
+  </div>
+  <form id="guess-form">
+    <input type="text" id="guess-form-input">
+  </form>
+
+  <div id="results">
+    <h2></h2>
+  </div>
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-36936766-1']);
+  _gaq.push(['_setDomainName', 'olinapps.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</body>
+</html>

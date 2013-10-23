@@ -194,7 +194,7 @@ app.get('/login', function (req, res) {
       if (req.query.external) {
         return res.redirect('/external?callback=' + req.query.external);
       } else {
-        return res.redirect('http://www.olinapps.com/?sessionid=' + user.sessionid);
+        return res.redirect('http://' + app.get('host') + '/?sessionid=' + user.sessionid);
       }
     }
 
@@ -217,18 +217,18 @@ app.post('/login', function (req, res) {
         password: req.body.password,
       }, function (err, json) {
 
-        // Noah Tye, Class of Never
-        if ((err || json.error) && req.body.username == 'ntye') {
-          json = { email: 'noah.tye@students.olin.edu', error: false }; err = null;
-        }
-        // Rachel Fox, transfer
-        if ((err || json.error) && req.body.username == 'rfox') {
-          json = { email: 'rachel.fox@students.olin.edu', error: false }; err = null;
-        }
-        // Gabriel Villenave, professional cheese taster
-        if ((err || json.error) && req.body.username == 'gvillenave') {
-          json = { email: 'gabriel.villenave@students.olin.edu', error: false }; err = null;
-        }
+        // // Noah Tye, Class of Never
+        // if ((err || json.error) && req.body.username == 'ntye') {
+        //   json = { email: 'noah.tye@students.olin.edu', error: false }; err = null;
+        // }
+        // // Rachel Fox, transfer
+        // if ((err || json.error) && req.body.username == 'rfox') {
+        //   json = { email: 'rachel.fox@students.olin.edu', error: false }; err = null;
+        // }
+        // // Gabriel Villenave, professional cheese taster
+        // if ((err || json.error) && req.body.username == 'gvillenave') {
+        //   json = { email: 'gabriel.villenave@students.olin.edu', error: false }; err = null;
+        // }
 
         if (err || json.error) {
           res.render('login.jade', {
@@ -245,9 +245,9 @@ app.post('/login', function (req, res) {
             generateSession(req, user, function (err, sessionid) {
               // Finished logging in, now redirect back to non HTTPS domain.
               if (req.query.external) {
-                res.redirect('http://olinapps.com/login?sessionid=' + sessionid + '&external=' + req.query.external);
+                res.redirect('http://' + app.get('host') + '/login?sessionid=' + sessionid + '&external=' + req.query.external);
               } else {
-                res.redirect('http://olinapps.com/login?sessionid=' + sessionid);
+                res.redirect('http://' + app.get('host') + '/login?sessionid=' + sessionid);
               }
             })
           });
