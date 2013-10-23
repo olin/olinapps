@@ -16,16 +16,20 @@ block content
         a(href="#day-" + day.dayname.toLowerCase())= day.dayname
 
   each day in meals
-    hr
-    h2(id="day-" + day.dayname.toLowerCase())= day.dayname
+    .row
+      .span12
+        hr
+        h2(id="day-" + day.dayname.toLowerCase())= day.dayname
 
+    .row
     each mealname, meal in {'breakfast': 'Breakfast', 'lunch': 'Lunch', 'dinner': 'Dinner'}
-      h3= mealname
-      dl
-        each foods, section in day[meal]
-          dt 
-            b= section
-          dd
-            ul
-              each item in foods
-                li= item.name
+      div.span2(style="width: 33%; margin: 0; box-sizing: border-box; padding: 0 20px")
+        h3= mealname
+        dl
+          each foods, section in day[meal]
+            dt 
+              b= section
+            dd
+              ul
+                each item in foods
+                  li= item.name
