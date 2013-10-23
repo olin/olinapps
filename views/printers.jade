@@ -1,0 +1,16 @@
+extends layout
+block content
+  h1 Printers
+
+  h2 Installing printers
+  h3 Windows
+  p You're done!
+  h3 OSX
+  p Xerox supplies a driver for its printers. You can download the .dmg from the Xerox website. The installer has a stage which allows you to add printers. You will need to supply the IP address/hostname of each printer you are interested in adding.
+
+  h2 Access from your web browser
+  p Here are a list of printers available at Olin. The first two letters indicate the building (East Hall, AC, etc.) and possibly the floor. <b>NOTE:</b> To access these in your web browser, make sure you're connected to the <code>OLIN</code> Wifi network. 
+  ul
+    each printer in printers
+      li
+        a(href=printer.url) <b>#{printer.id.toUpperCase()}</b> &mdash; #{printer.building} room #{printer.room} (#{printer.type} ##{printer.number})

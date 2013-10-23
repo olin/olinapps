@@ -44,6 +44,7 @@ app.configure('production', function () {
   app.set('host', 'www.olinapps.com');
 });
 
+
 /**
  * Helpers
  */
@@ -124,6 +125,7 @@ function jsonifyUser (user) {
     created: user.created
   };
 }
+
 
 /**
  * Routes
@@ -340,6 +342,17 @@ function apiNetworkLogin (req, res) {
 
 app.post('/api/networklogin', apiNetworkLogin);
 app.post('/api/exchangelogin', apiNetworkLogin); // deprecated
+
+
+/**
+ * "apps"
+ */
+
+exports.app = app;
+exports.getSessionUser = getSessionUser;
+
+require('./apps/printers');
+
 
 /**
  * Launch
