@@ -3,7 +3,7 @@ extends layout
 block person
   .person.span4
     .person-image
-      img.lazyload(src='', data-src=person.thumbnail || person.avatar || '', style='cursor: pointer', onclick='$(this).parent().parent().find(".bigavatar").attr("src", $(this).parent().parent().find(".bigavatar").attr("data-src")); $(this).parent().next().lightbox();')
+      img.lazyload(src=person.thumbnail || person.avatar ? 'about:blank' : '', data-src=person.thumbnail || person.avatar || '', style='cursor: pointer', onclick='$(this).parent().parent().find(".bigavatar").attr("src", $(this).parent().parent().find(".bigavatar").attr("data-src")); $(this).parent().next().lightbox();')
     .lightbox.fade(style='display: none;')
       .lightbox-content
         a(href=person.thumbnail || person.avatar)

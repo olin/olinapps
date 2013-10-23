@@ -44,16 +44,20 @@ olin.expandDistributionList(process.argv[2], process.argv[3], 'StudentsAll', fun
           domain: student.email_address.replace(/^.*?@/, '').toLowerCase()
         }
 
-        if (student.id != 'crossreg') {
+        if (student.id != 'crossreg' && student.id != 'joseph.student') {
           students.push(student);
         }
       })
     });
 
-    console.log(students) ;
+    console.log(students);
+
+    if (DRY) {
+      console.error('DRY RUN. Set dry = false to make this work')
+    }
 
     // Now update this list of students in the db.
-    !DRY && students.forEach(function (student) {
+    students.forEach(function (student) {
       // Don't "update" the ID. Set name as "nickname" can override it.
       var id = student.id;
       delete student.id;
