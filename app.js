@@ -174,7 +174,7 @@ app.get('/external', function (req, res) {
 app.get('/login', function (req, res) {
   // Require that this be on the Heroku HTTPS domain, not on olinapps.com
   if (process.env.NODE_ENV == 'production' && req.headers.host != 'olinapps.herokuapp.com') {
-    return res.redirect('https://olinapps.heroku.com/login?callback');
+    return res.redirect('https://olinapps.heroku.com/login' + ('external' in req.query ? '?external=' + req.query.external : ''));
   }
 
   getSessionUser(req, function (err, user) {
