@@ -360,6 +360,7 @@ exports.getSessionUser = getSessionUser;
 
 // Nothing magical here, just continue adding routes
 // just combine them logically in different files.
+require('./apps/dining');
 require('./apps/printers');
 require('./apps/launchpad');
 

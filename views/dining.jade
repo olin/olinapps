@@ -1,0 +1,31 @@
+extends layout
+block content
+  h1 Dining Menu
+
+  - var daysofweek = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+  p Jump to:
+  ul
+  each day in meals
+    li
+      if day.dayname == daysofweek[new Date().getDay()]
+        a(href="#day-" + day.dayname.toLowerCase())
+          b= day.dayname
+           |  (Today)
+      else
+        a(href="#day-" + day.dayname.toLowerCase())= day.dayname
+
+  each day in meals
+    hr
+    h2(id="day-" + day.dayname.toLowerCase())= day.dayname
+
+    each mealname, meal in {'breakfast': 'Breakfast', 'lunch': 'Lunch', 'dinner': 'Dinner'}
+      h3= mealname
+      dl
+        each foods, section in day[meal]
+          dt 
+            b= section
+          dd
+            ul
+              each item in foods
+                li= item.name
