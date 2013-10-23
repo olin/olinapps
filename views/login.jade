@@ -36,7 +36,7 @@ block content
     h2 Account
     p
       | You are logged in as
-      code= user._id
+      code= user.name || user.id
       | .
     form(method='post', action='/logout')
       button.btn.btn-danger Logout

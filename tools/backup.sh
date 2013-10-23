@@ -1,4 +1,8 @@
 #!/bin/sh
+
+# Create a database dump of olinapps
+# save it to tools/backups
+
 pushd .. 
 export MONGOURI="$(heroku config | grep MONGOLAB_URI | cut -c 16-)"
 popd
