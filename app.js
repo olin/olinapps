@@ -28,7 +28,7 @@ app.configure(function () {
   app.use(express.session({
     secret: app.get('secret'),
     store: new MongoStore({
-      url: process.env.MONGOLAB_URI || 'mongodb://localhost/olinapps-quotes'
+      url: process.env.MONGOLAB_URI || 'mongodb://localhost/olinapps'
     })
   }));
   app.use(app.router);
@@ -36,7 +36,7 @@ app.configure(function () {
 });
 
 app.configure('development', function () {
-  app.set('host', 'localhost:3000');
+  app.set('host', 'localhost:' + app.get('port'));
   app.use(express.errorHandler());
 });
 
@@ -322,6 +322,7 @@ app.get('/api/sessionid', function (req, res) {
 });
 
 
+// TODO GET RID OF THIS DIRECT CALL
 function apiNetworkLogin (req, res) {
   if (req.body.username && req.body.password) {
     olin.networkLogin(req.body.username, req.body.password, function (err, json) {
