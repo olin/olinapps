@@ -22,8 +22,8 @@ html
     script(src="http://fitvidsjs.com/js/jquery.fitvids.js")
 
     // Chosen extension
-    link(href="http://harvesthq.github.io/chosen/chosen/chosen.css", rel="stylesheet")
-    script(src="http://harvesthq.github.io/chosen/chosen/chosen.jquery.js")
+    link(href="http://harvesthq.github.io/chosen/chosen.css", rel="stylesheet")
+    script(src="http://harvesthq.github.io/chosen/chosen.jquery.js")
 
     // Fonts
     link(href='http://fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700', rel='stylesheet', type='text/css')
@@ -99,19 +99,19 @@ html
         .fb-comments, .fb-comments > span, .fb-comments iframe[style] { display: none !important; }
       }
 
-    script
-      $(function () {
-        $('.project-link').on('click', function (e) {
-          window.location.href = $(this).find('a').prop('href');
-        })
-        $(".project-video").fitVids();
-        $(".chzn-select").chosen();
-        $('.project-body img').each(function () {
-          $(this).wrap($('<a>').attr('href', $(this).prop('src')).css('max-width', '500px'));
-          $('<span>').insertAfter(this).text($(this).prop('alt')).addClass('img-caption');
-        })
-        $('.project-body table').addClass('table').addClass('table-striped');
-      })
+    script.
+      // Global for other scripts to use.
+      var isMobile = /mobi/i.test(navigator.userAgent);
+
+      // Skip iPhone URL bar.
+      // http://remysharp.com/2010/08/05/doing-it-right-skipping-the-iphone-url-bar/
+      if (isMobile && !location.hash) {
+        setTimeout(function () {
+          if (!pageYOffset) {
+            window.scrollTo(0, 1);
+          }
+        }, 1000);
+      }
 
   body
     self = 'apps'

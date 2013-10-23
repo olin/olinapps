@@ -348,10 +348,14 @@ app.post('/api/exchangelogin', apiNetworkLogin); // deprecated
  * "apps"
  */
 
+// These variables will be needed by our apps.
 exports.app = app;
 exports.getSessionUser = getSessionUser;
 
+// Nothing magical here, just continue adding routes
+// just combine them logically in different files.
 require('./apps/printers');
+require('./apps/launchpad');
 
 
 /**

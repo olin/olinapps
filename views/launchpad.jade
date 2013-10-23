@@ -1,0 +1,359 @@
+extends layout
+block content
+  script.
+    $(function () {
+      var ANIM_SPEED = 'fast';
+
+      // Cache links list.
+      var links = {};
+      $('#app-list p').each(function () {
+        links[$(this).text().toLowerCase()] = this;
+      });
+
+      // Return the first shortcut link.
+      function getFirstLink() {
+        return $('#app-list p:visible:first')[0];
+      }
+
+      // Filter lists based on a keywords array.
+      function filterList(keywords) {
+        // When filtering, hide headers.
+        keywords.length ? $('.container-fluid h2').hide(ANIM_SPEED) : $('.container-fluid h2').show(ANIM_SPEED);
+
+        // If there are no keywords, show all links.
+        if (!keywords.length) {
+          $.each(links, function (title, link) {
+            $(link).show()
+          });
+        } else {
+          $.each(links, function (title, link) {
+            $(link).removeClass('first')
+            $.each(keywords, function (_, keyword) {
+              if (!title.match(keyword)) {
+                $(link).hide()
+              } else {
+                $(link).show()
+              }
+            })
+          });
+        }
+
+        // Include shortcut for first link.
+        var first = getFirstLink();
+        $(first).addClass('first');
+        first ? $('#quick-link').show(ANIM_SPEED) : $('#quick-link').hide(ANIM_SPEED);
+        $('#quick-link-name').text($(first).text());
+      }
+
+      // Keyup filter.
+      $('#filter-input').keyup(function () {
+        // Filter keywords
+        var keywords = $.grep($('#filter-input').val().toLowerCase().split(/\s+/), $.trim);
+        filterList(keywords);
+      })
+
+      if (!isMobile) {
+        $('#filter-input').focus();
+      }
+
+      // Filter initially so we update shortcut link.
+      filterList([]);
+
+      // First link shortcut.
+      $('#header').submit(function () {
+        var first = getFirstLink()
+        if (first) {
+          window.top.location = $(first).find('a').attr('href')
+        }
+        return false;
+      })
+    })
+  style.
+    #header { margin-bottom: 20px; }
+
+    .container-fluid h2 { clear: both; margin: 0; padding: 15px 0 5px; font-size: 1.3em; line-height: inherit; }
+    #header .header-search { padding: 5px 0 0 5px; vertical-align: baseline; }
+    #quick-link { padding: 3px 0 0 10px; color: #444; font-style: italic }
+    #quick-link-name { font-weight: bold; }
+
+    #app-list, #app-list p { display: block; margin: 0; padding: 0; }
+    #app-list { overflow: auto; }
+    #app-list p { float: left; width: 144px; height: 150px; margin: 1px; text-align: center; }
+    #app-list p a { width: 132px; height: 134px; text-decoration: none; display: block;
+      background: #eee; border: 2px solid #eee; padding: 6px 4px; border: 1px solid #888; cursor: pointer; box-shadow: #aaa 2px 2px 2px;
+      color: black; font-size: 14px;}
+    #app-list p a:hover, #app-list p.first a { background: #fff; border: 2px solid #fa0; padding: 5px 3px;}
+    #app-list p img { display: block; width: 90px; height: 90px; margin: 5px auto 10px; }
+    #footer { font-size: 0.7em; text-align: center; padding: 2em 0 0.5em; line-height: 1.3; }
+
+    #nav, #nav li { display: block; margin: 0; padding: 0; }
+    #nav li { background: #bbb; box-shadow: #222 0 1px 1px; margin: 10px 0; } 
+    #nav a { display: block; padding: 4px 8px; line-height: 24px; }
+    #nav img { width: 24px; margin-right: 10px; }
+
+    #quick-link { padding: 3px 0 0 10px; color: #444; font-style: italic }
+    #quick-link-name { font-weight: bold; }
+
+    #content { margin: 0; padding: 0; max-width: none; }
+    #appheader { border-bottom: 1px solid #999; margin: 0 0 30px; padding: 15px 0 0 20px; background: #eee; overflow: auto; height: 55px; }
+    #appheader h1 { font-size: 30px; float: left; margin: 0 20px 0 0; padding: 0; text-shadow: #fff 1px 1px 0; }
+    #appheader-controls { float: right; margin: 5px 20px 0 0; }
+
+    #appheader.affix { width: 100%; margin: 0; top: 0; }
+    #appheader.affix #appheader-inner { margin-right: 20px; } }
+
+  form#appheader.form-search.row(data-spy='affix', data-offset-top='41')
+    #appheader-inner
+      h1 Launchpad
+      .input-prepend.header-search
+        span.add-on
+          i.icon-search
+        input#filter-input.span3(type='search', placeholder='Filter items...', name='search')
+      span#quick-link
+        | Press ENTER to go to
+        span#quick-link-name
+      #appheader-controls
+        a.btn.btn-info(href='#correctitem', role='button', data-toggle='modal') Add or Correct Links
+        //
+          <a href="/logout" role="button" class="btn">Log out</a>
+  #correctitem.modal.hide.fade
+    .modal-header
+      button.close(type='button', data-dismiss='modal', aria-hidden='true') ×
+      h3 Adding or Correcting Links
+    .modal-body
+      | To add or correct links, send an email to
+      a(href='mailto:timothy.ryan@students.olin.edu') Tim Ryan
+      | describing the changes to be made.
+  .container-fluid
+    #app-list
+      h2(style='padding-top: 0;') Organizations
+      p
+        a(target='_top', href='http://core.olin.edu', title='CORe')
+          img.category(src='/static/launchpad/corelogo.png')
+          | CORe
+      p
+        a(target='_top', href='http://honorboard.olin.edu', title='Honor Board')
+          img(src='/static/launchpad/honorboard.png')
+          | Honor Board
+      p
+        a(target='_top', href='http://serv.olin.edu', title='SERV')
+          img(src='/static/launchpad/serv.png')
+          | SERV
+      p
+        a(target='_top', href='http://sao.olin.edu', title='SAO')
+          img(src='http://rbsd.k12.ar.us/Templates/images/clubs%20and%20activities.gif')
+          | SAO
+      h2 Resources
+      p
+        a(target='_top', href='http://directory.olinapps.com/', title='Directory')
+          img(src='/static/launchpad/directory.gif')
+          | Directory
+      p
+        a(target='_top', href='http://calendar.olinapps.com/', title='Events Calendar')
+          img(src='http://a.dryicons.com/images/icon_sets/colorful_stickers_part_4_icons_set/png/256x256/calendar.png')
+          | Events Calendar
+      p
+        a(target='_top', href='https://my.olin.edu/ICS/Campus_Wide_Calendars.jnz', title='Academic Calendar')
+          img(src='/static/launchpad/academiccalendar.png')
+          | Academic Calendar
+      p
+        a(target='_top', href='http://scheduler.olin.edu:8080/astraweb/index.jsp?id1=sched_sta&id2=0linsched', title='AdAstra')
+          img(src='/static/launchpad/adastra.png')
+          | AdAstra
+      p
+        a(target='_top', href='http://www.laundryview.com', title='LaundryView')
+          img(src='/static/launchpad/laundry.png')
+          | LaundryView
+      p
+        a(target='_top', href='http://lists.olin.edu', title='Mailman')
+          img(src='/static/launchpad/mailman.png')
+          | Mailing Lists
+      p
+        a(target='_top', href='http://acl.olin.edu/advising/', title='HALP')
+          img(src='/static/launchpad/halp.png')
+          | HALP
+      p
+        a(target='_top', href='https://acl.olin.edu/msdnaa/', title='MSDN Software')
+          img(src='/static/launchpad/windows.jpg')
+          | MSDN Software
+      p
+        a(target='_top', href='http://www.flickr.com/photos/olin/', title='Olin Photos')
+          img(src='/static/launchpad/flickr.png')
+          | Olin Photos
+      p
+        a(target='_top', href='http://feeds.olin.edu', title='Olin RSS Feeds')
+          img(src='/static/launchpad/feeds.png')
+          | Olin RSS Feeds
+      p
+        a(target='_top', href='http://onecard.olin.edu', title='One Card')
+          img(src='/static/launchpad/onecard.png')
+          | One Card
+      p
+        a(target='_top', href='http://www.babson.edu/offices-services/public-safety/parking/Pages/parking-violation-appeal.aspx', title='Parking Ticket Appeal Form')
+          img(src='/static/launchpad/parkingticket.png')
+          | Parking Ticket Appeal Form
+      p
+        a(target='_top', href='http://www.planetolin.com', title='Planet Olin')
+          img(src='/static/launchpad/planetolin.png')
+          | Planet Olin
+      p
+        a(target='_top', href='http://mrwiki.olin.edu/mrwiki/', title='MrWiki')
+          img(src='/static/launchpad/mrwiki.jpg')
+          | MrWiki
+      p
+        a(target='_top', href='https://webmail.olin.edu/', title='Webmail')
+          img(src='/static/launchpad/webmail.png')
+          | Webmail
+      p
+        a(target='_top', href='http://workorders.olin.edu', title='Workorder')
+          img(src='/static/launchpad/workorder.png')
+          | Workorder
+      p
+        a(target='_top', href='http://ahs.olin.edu/ahswiki/WritingTutorPage', title='Writing Tutors')
+          img(src='/static/launchpad/writingtutors.png')
+          | Writing Tutors
+      p
+        a(target='_top', href='https://twitter.com/olindiningmenu', title='@olindiningmenu')
+          img(src='http://avatars.io/twitter/olindiningmenu')
+          | @olindiningmenu
+      p
+        a(target='_top', href='https://twitter.com/trimdiningmenu', title='@trimdiningmenu')
+          img(src='http://avatars.io/twitter/trimdiningmenu')
+          | @trimdiningmenu
+      h2 Portals
+      p
+        a(target='_top', href='http://courses.olin.edu', title='Blackboard')
+          img(src='/static/launchpad/blackboard.png')
+          | Blackboard
+      p
+        a(target='_top', href='https://sis.olin.edu', title='SIS')
+          img(src='/static/launchpad/sis.png')
+          | SIS
+      p
+        a(target='_top', href='http://my.olin.edu', title='my.olin.edu')
+          img(src='/static/launchpad/my.png')
+          | my.olin.edu
+      p
+        a(target='_top', href='https://olin-csm.symplicity.com/students/', title='NaceLink')
+          img(src='/static/launchpad/nacelink.png')
+          | NaceLink
+      h2 Clubs
+      p
+        a(target='_top', href='http://minibaja.olin.edu', title='Mini Baja')
+          img(src='/static/launchpad/baja.png')
+          | Mini Baja
+      p
+        a(target='_top', href='http://fwop.olin.edu', title='FWOP')
+          img(src='/static/launchpad/fwop.png')
+          | FWOP
+      p
+        a(target='_top', href='http://open.olin.edu/', title='Open')
+          img(src='/static/launchpad/open.png')
+          | Open
+      p
+        a(target='_top', href='http://serv.olin.edu/habitat/', title='Habitat for Humanity')
+          img(src='/static/launchpad/habitat.png')
+          | Habitat for Humanity
+      p
+        a(target='_top', href='http://hpv.olin.edu/Home.html', title='Human Powered Vehicles')
+          img(src='/static/launchpad/hpv.jpg')
+          | Human Powered Vehicles
+      p
+        a(target='_top', href='http://ieee.olin.edu', title='IEEE')
+          img(src='/static/launchpad/ieee.png')
+          | IEEE
+      p
+        a(target='_top', href='http://swe.olin.edu/', title='SWE')
+          img(src='/static/launchpad/swe.png')
+          | SWE
+      p
+        a(target='_top', href='http://foundry.olin.edu', title='The Foundry')
+          img(src='/static/launchpad/foundry.png')
+          | The Foundry
+      h2 Departments
+      p
+        a(target='_top', href='http://projects.olin.edu/ahs/index.html', title='AHS')
+          img(src='/static/launchpad/ahs.png')
+          | AHS
+      p
+        a(target='_top', href='http://star.olin.edu', title='StAR')
+          img(src='/static/launchpad/star.png')
+          | StAR
+      p
+        a(target='_top', href='http://www.olindining.com', title='Dining Services')
+          img(src='/static/launchpad/diningservices.png')
+          | Dining Services
+      p
+        a(target='_top', href='http://campusservices.olin.edu/Facilities.html', title='Facilities')
+          img(src='/static/launchpad/facilities.png')
+          | Facilities
+      p
+        a(target='_top', href='http://www.olin.edu/pgp/', title='PGP')
+          img(src='/static/launchpad/pgp.png')
+          | PGP
+      p
+        a(target='_top', href='http://it.olin.edu', title='IT')
+          img(src='/static/launchpad/it.png')
+          | IT
+      p
+        a(target='_top', href='http://studyaway.olin.edu', title='Study Away')
+          img(src='/static/launchpad/studyaway.png')
+          | Study Away
+      p
+        a(target='_top', href='http://library.olin.edu', title='Library')
+          img(src='/static/launchpad/library.png')
+          | Library
+      p
+        a(target='_top', href='http://machineshop.olin.edu', title='Machine Shop')
+          img(src='/static/launchpad/machineshop.png')
+          | Machine Shop
+      p
+        a(target='_top', href='http://projects.robotics.olin.edu/index.php/Main_Page', title='Robotics Lab')
+          img(src='/static/launchpad/robotics.png')
+          | Robotics Lab
+      p
+        a(target='_top', href='http://olingear.olin.edu/', title='Olin Gear')
+          img(src='/static/launchpad/olingear.png')
+          | Olin Gear
+      h2 Schools
+      p
+        a(target='_top', href='http://www.olin.edu', title='Olin College')
+          img(src='/static/launchpad/olin.png')
+          | Olin College
+      p
+        a(target='_top', href='http://babson.edu/', title='Babson')
+          img(src='/static/launchpad/babson.png')
+          | Babson
+      p
+        a(target='_top', href='http://wellesley.edu/', title='Wellesley')
+          img(src='/static/launchpad/wellesley.png')
+          | Wellesley
+      p
+        a(target='_top', href='http://brandeis.edu/', title='Brandeis')
+          img(src='/static/launchpad/brandeis.png')
+          | Brandeis
+      h2 Archived
+      p
+        a(target='_top', href='http://yearbook.olin.edu', title='Yearbook')
+          img(src='/static/launchpad/yearbook.png')
+          | Yearbook
+      p
+        a(target='_top', href='http://awesome.olin.edu', title='OSA')
+          img(src='/static/launchpad/osa.png')
+          | OSA
+      //
+        <p><a target="_top" href="http://10.64.10.12/view/index.shtml" title="Great Lawn Webcam"><img src="images/camera.jpg"> Great Lawn Webcam</a>
+        <p><a target="_top" href="http://arb.olin.edu/" title="ARB"><img src="images/arb.png"> ARB</a></p> 
+        <p><a target="_top" href="http://campusservices.olin.edu/" title="Campus Services"><img src="images/campusservices.png"> Campus Services</a></p> 
+    p#footer
+      | Launchpad 3.0 maintained by
+      a(target='_top', href='http://ohack.us/') OHACK
+      | .
+      br
+      | Launchpad 2.0 by
+      a(target='_blank', href='http://nomagicsmoke.com/', title='Jeffrey Stanton\'s Website [new window]') Jeffrey Stanton (2010)
+      | .
+      br
+      | Original version by
+      a(target='_blank', href='http://www.grgmrr.com/', title='Greg Marra\'s Website [new window]') Greg Marra (2010)
+      | .
