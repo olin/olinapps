@@ -22,19 +22,24 @@ block content
         h2(id="day-" + day.dayname.toLowerCase())= day.dayname
 
     .row
-    each mealname, meal in {'breakfast': 'Breakfast', 'lunch': 'Lunch', 'dinner': 'Dinner'}
-      div.span2(style="width: 33%; margin: 0; box-sizing: border-box; padding: 0 20px")
-        h3= mealname
-        dl
-          each foods, section in day[meal]
-            dt 
-              b= section
-            dd
-              ul
-                each item in foods
-                  li= item.name
+      each mealname, meal in {'breakfast': 'Breakfast', 'lunch': 'Lunch', 'dinner': 'Dinner'}
+        div.span2(style="width: 33%; margin: 0; box-sizing: border-box; padding: 0 20px")
+          h3= mealname
+          dl
+            each foods, section in day[meal]
+              dt 
+                b= section
+              dd
+                ul
+                  each item in foods
+                    li= item.name
 
   script.
     $(function () {
-      $('h3').each(function (a) { $('<a>').css('padding-left', '10px').css('font-size', '12px').text('(Read aloud)').attr('href', 'http://tts-api.com/tts.mp3?q=' + encodeURIComponent($(this).parent().find('dt, li').map(function (a) { return this.tagName == 'DT' ? 'Today\'s ' + $(this).text() + ': ' : $(this).text() + '. '; }).toArray().join(' '))).appendTo(this); })
+      $('h3').each(function (a) {
+        $('<a>').css('padding-left', '10px').css('font-size', '12px').text('(Read aloud)')
+          .attr('href', 'http://tts-api.com/tts.mp3?q=' + encodeURIComponent($(this).parent().parent().prev().find('h2').text() + ' ' + $(this).text() + ': ' + $(this).parent().find('dt, li').map(function (a) {
+            return this.tagName == 'DT' ? 'Today\'s ' + $(this).text() + ': ' : $(this).text() + '. ';
+            }).toArray().join(' '))).appendTo(this);
+        })
     })
