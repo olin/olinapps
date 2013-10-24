@@ -33,3 +33,8 @@ block content
               ul
                 each item in foods
                   li= item.name
+
+  script.
+    $(function () {
+      $('h3').each(function (a) { $('<a>').css('padding-left', '10px').css('font-size', '12px').text('(Read aloud)').attr('href', 'http://tts-api.com/tts.mp3?q=' + encodeURIComponent($(this).parent().find('dt, li').map(function (a) { return this.tagName == 'DT' ? 'Today\'s ' + $(this).text() + ': ' : $(this).text() + '. '; }).toArray().join(' '))).appendTo(this); })
+    })
