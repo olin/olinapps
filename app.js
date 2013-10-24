@@ -377,6 +377,7 @@ exports.db = db;
 // Nothing magical here, just continue adding routes
 // just combine them logically in different files.
 require('./apps/directory');
+require('./apps/calendar');
 require('./apps/dining');
 require('./apps/printers');
 require('./apps/launchpad');

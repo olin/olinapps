@@ -1,0 +1,88 @@
+extends layout
+
+block content
+  script.
+    $(function () {
+      $('.modal').on('shown', function () {
+        $('input[type=text]', this).focus();
+      })
+    });
+  style.
+    html, body, #content-wrapper, .container-fluid, .container-fluid iframe, #iframe-wrapper { height: 100%; }
+    body { overflow: hidden; background: white; }
+    #iframe-wrapper { box-sizing: border-box; padding-bottom: 150px; }
+
+    #content { margin: 0; padding: 0; max-width: none; }
+    #appheader { border-bottom: 1px solid #999; margin: 0 0 20px; padding: 15px 0 0 20px; background: #eee; overflow: auto; height: 55px; }
+    #appheader h1 { font-size: 30px; float: left; margin: 0 20px 0 0; padding: 0; text-shadow: #fff 1px 1px 0; }
+    #appheader-controls { float: right; margin: 5px 20px 0 0; }
+    #appheader.affix { width: 100%; margin: 0; top: 0; }
+    #appheader.affix #appheader-inner { margin-right: 20px; } }
+
+  form#appheader(method='post', action='/')
+    #appheader-inner
+      h1 Event Calendar
+      #appheader-controls
+        a.btn.btn-info(href='#importcalendar', role='button', data-toggle='modal') Add calendar to Outlook
+        //- a.btn(href='#addevent', role='button', data-toggle='modal') Add an Event
+        //- #addevent.modal.hide.fade
+          .modal-header
+            button.close(type='button', data-dismiss='modal', aria-hidden='true') ×
+            h3 Adding an event
+          .modal-body
+            | There are two ways to simply add an event to this calendar:
+            ul
+              li
+                | Events with iCals sent to the
+                a(href='mailto:carpediem@lists.olin.edu') carpediem@lists.olin.edu
+                | mailing list are automatically added to this calendar.
+              li
+                | To add an event directly, attach an iCal to an email sent to
+                a(href='mailto:olineventcalendar@gmail.com') olineventcalendar@gmail.com
+                | .
+                b NOTE:
+                | This email must come from an
+                tt @students.olin.edu
+                | address.
+            p It takes about 10 minutes for events to be added to the calendar.
+        //- a.btn(href='#correctevent', role='button', data-toggle='modal') Correct an Event
+        //- #correctevent.modal.hide.fade
+          .modal-header
+            button.close(type='button', data-dismiss='modal', aria-hidden='true') ×
+            h3 Correcting Events
+          .modal-body
+            | To correct an event, share this calendar with your @students.olin.edu and edit it using Google Calendar:
+            input(type='text', name='email')
+            | @students.olin.edu
+            button.btn.btn-success Share to Google Calendar
+
+  #importcalendar.modal.hide.fade
+    .modal-header
+      button.close(type='button', data-dismiss='modal', aria-hidden='true') ×
+      h3 Adding calendar to Outlook
+    .modal-body
+      p Copy this address:
+      pre(style='font-size: 12px;')
+        code.
+          https://www.google.com/calendar/ical/sacolincollege%40gmail.com/public/basic.ics          
+      p
+        | Open Outlook and go to the top menu, clicking Tools → Account Settings. In Account Settings choose the Internet Calendars tab, click on New... and Paste the URL you just copied from Google into the location and click Add.
+      p(style='margin: 25px 50px;')
+        img(src='http://www.howtogeek.com/wp-content/uploads/2007/05/WindowsLiveWriter/ViewYourGoogleCalendarWithOutlook2007_10DE0/call2.png')
+      p
+        | You then get to the subscriptions screen. Give the calendar a name and description and click OK.
+      p(style='margin: 25px 50px;')
+        img(src='http://www.howtogeek.com/wp-content/uploads/2007/05/WindowsLiveWriter/ViewYourGoogleCalendarWithOutlook2007_10DE0/cala.png')
+      p You can now see the calendar in the list in the Outlook sidebar panel.
+      p(style='margin: 25px 50px; text-align: center;')
+        img(src='http://www.howtogeek.com/wp-content/uploads/2007/05/WindowsLiveWriter/ViewYourGoogleCalendarWithOutlook2007_10DE0/ffff.png')
+      p
+        em
+          small
+            | Source:
+            a(href='http://www.howtogeek.com/howto/microsoft-office/view-your-google-calendar-in-outlook-2007/')
+              | http://www.howtogeek.com/howto/microsoft-office/view-your-google-calendar-in-outlook-2007/
+  .container-fluid
+    #iframe-wrapper.row-fluid
+      iframe.span4(src='https://www.google.com/calendar/embed?showTitle=0&showNav=0&showDate=1&showPrint=0&showTabs=0&showCalendars=0&mode=AGENDA&wkst=1&bgcolor=%23ffffff&src=olineventcalendar%40gmail.com&src=sacolincollege%40gmail.com&color=%232952A3&ctz=America%2FNew_York', style='border-width: 0;', width='800', height='300', frameborder='0', scrolling='no')
+      iframe.span8(src='https://www.google.com/calendar/embed?src=olineventcalendar%40gmail.com&src=sacolincollege%40gmail.com&showTitle=0&ctz=America/New_York&mode=WEEK&bgcolor=%23ffffff', style='border: 0;', width='800', height='300', frameborder='0', scrolling='no')
