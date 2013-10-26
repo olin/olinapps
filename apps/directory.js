@@ -60,6 +60,35 @@ app.get('/directory', function (req, res) {
 })
 
 
+app.post('/directory', function (req, res) {
+  getSessionUser(req, function (err, user) {
+    if (!user) {
+      return res.redirect('/login');
+    }
+
+    var keys = ['nickname', 'room', 'phone', 'mail',
+      'twitter', 'facebook', 'tumblr', 'skype', 'pinterest', 'lastfm', 'google',
+      'preferredemail', 'thumbnail'];
+    var update = {};
+
+    keys.forEach(function (key) {
+      if (key in req.body) {
+        update[key] = String(req.body[key]).substr(0, 256);
+      }
+    });
+
+    db.users.update({
+      _id: user.id
+    }, {
+      $set: update
+    }, function (err) {
+      console.error('Updating profile for', user.id, '=>', err || 'OK');
+      res.redirect('/directory');
+    });
+  });
+})
+
+
 // Temporary until template
 app.get('/directory/guess', function (req, res, next) {
   getSessionUser(req, function (err, user) {

@@ -162,6 +162,8 @@ block content
     .person-image img[src=''] { height: 100px; background: #bbb; }
 
   form#appheader.form-search.row(data-spy='affix', data-offset-top='41')
+    #appheader-controls
+      a.btn.btn-info(href="#updateprofile", role="button", data-toggle="modal") Update your information
     #appheader-inner
       h1 Directory
       .input-prepend.header-search
@@ -184,3 +186,52 @@ block content
       - var people = directory.filter(function (p) { return p.domain == 'olin.edu' });
       h2(style="padding-top: 0") Faculty and Staff (#{people.length} people)
       block person_list
+
+  form(method='post')
+    #updateprofile.modal.hide.fade
+      .modal-header
+        button.close(type='button', data-dismiss='modal', aria-hidden='true') ×
+        h3 Update Your Profile
+        p 
+          b Please make all information accurate and useful as possible.
+      .modal-body
+        | Full Name:
+        input(type='text', name='nickname', value=user.nickname || user.name)
+        br
+        | Location/Room:
+        input(type='text', name='room', placeholder='eg. "WH628", "742 Evergreen Terrace"', value=user.room)
+        br
+        | Preferred e-mail:
+        input(type='text', name='preferredemail', value=user.preferredemail || user.email)
+        br
+        | Phone #:
+        input(type='text', name='phone', placeholder='000-000-0000', value=user.phone)
+        br
+        | Mailbox #/Mail Address:
+        input(type='text', name='mail', placeholder='eg. "MB785", "P.O. Box 4444"', value=user.mail)
+        br
+        hr
+        | Facebook ID:
+        input(type='text', name='facebook', value=user.facebook)
+        br
+        | Skype ID:
+        input(type='text', name='skype', value=user.skype)
+        br
+        | Google ID:
+        input(type='text', name='google', value=user.google)
+        br
+        | Twitter ID:
+        input(type='text', name='twitter', value=user.twitter)
+        br
+        | Last.fm ID:
+        input(type='text', name='lastfm', value=user.lastfm)
+        br
+        | Tumblr ID:
+        input(type='text', name='tumblr', value=user.tumblr)
+        br
+        | Pinterest ID:
+        input(type='text', name='pinterest', value=user.pinterest)
+        br
+      .modal-footer
+        //- button.btn(data-dismiss='modal', aria-hidden='true') Close
+        button(type="submit").btn.btn-success Save Changes
