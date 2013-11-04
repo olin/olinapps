@@ -1,8 +1,10 @@
 extends layout
 block content
   style
-    .row-fluid a.btn { display: block; }
+    .row-fluid a.btn { display: block; font-size: 1.1em; }
     .row-fluid p.span9 { padding-top: 5px; }
+
+  link(href="/static/ionicons/ionicons.css", rel="stylesheet")
 
   #page-projects
     h2 Apps
@@ -10,33 +12,45 @@ block content
     .row-fluid
       p.span3
         a.btn(href='/calendar')
+          i.icon-calendar
+          |  
           b Calendar
       p.span9  Schoolwide studnet events calendar, maintained by <a href="http://sac.olin.edu/">SAC</a>.
     .row-fluid
       p.span3
         a.btn(href='/directory')
+          i.icon-ios7-people
+          |  
           | Student 
           b Directory
       p.span9  Olin community names and contact information. (Login required.)
     .row-fluid
       p.span3
         a.btn(href='/dining')
+          i.icon-fork
+          |  
           b Dining
           |  Menu
       p.span9  What's to eat this week at Olin Dining Hall?
     .row-fluid
       p.span3
         a.btn(href='/directory/guess')
+          i.icon-help-circled
+          |  
           b Guess the Oliner
       p.span9  How well do you know the names of other Oliners? Find out in this classy game! (Login required.)
     .row-fluid
       p.span3
         a.btn(href='/launchpad')
+          i.icon-ios7-world
+          |  
           b Launchpad
       p.span9 A dashboard for all of Olin's common web destinations.
     .row-fluid
       p.span3
         a.btn(href='/printers')
+          i.icon-printer
+          |  
           b Printers
       p.span9  Olin printers and information on how to access them.
 
@@ -65,7 +79,7 @@ block content
     .row-fluid
       p.span3
         a.btn(href='http://github.com/olin')
-          b Github
+          b Olinapps Github
       p.span9
         | Code for Olin Community websites, code, and much more.
     .row-fluid
