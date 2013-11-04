@@ -209,14 +209,17 @@ app.get('/login', function (req, res) {
 
 /* POST */
 
+function login (username, password, next) {
+  rem.json('http://foundry.olin.edu/login.php').post('form', {
+    username: username,
+    password: password,
+  }, next);
+}
+
 app.post('/login', function (req, res) {
   if (req.body.username && req.body.password) {
     try {
-      rem.json('http://foundry.olin.edu/login.php').post('form', {
-        username: req.body.username,
-        password: req.body.password,
-      }, function (err, json) {
-
+      login(req.body.username, req.body.password, function (err, json) {
         // // Noah Tye, Class of Never
         // if ((err || json.error) && req.body.username == 'ntye') {
         //   json = { email: 'noah.tye@students.olin.edu', error: false }; err = null;
@@ -340,20 +343,24 @@ app.get('/api/sessionid', function (req, res) {
 // TODO GET RID OF THIS DIRECT CALL
 function apiNetworkLogin (req, res) {
   if (req.body.username && req.body.password) {
-    olin.networkLogin(req.body.username, req.body.password, function (err, json) {
-      if (!json || !json.mailbox || !json.mailbox.emailAddress) {
-        res.json({error: true, message: 'Invalid credentials.'}, 401);
-      } else {
-        var email = json.mailbox.emailAddress.toLowerCase();
-        ensureUser(email, function (err, user) {
-          generateSession(req, user, function (err, sessionid) {
-            res.json({
-              error: false,
-              sessionid: sessionid,
-              user: jsonifyUser(user)
-            });
-          })
-        });
+    login(req.body.username, req.body.password, function (err, json) {
+      try {
+        if (!json || !json.email) {
+          res.json({error: true, message: 'Invalid credentials.'}, 401);
+        } else {
+          var email = json.email.toLowerCase();
+          ensureUser(email, function (err, user) {
+            generateSession(req, user, function (err, sessionid) {
+              res.json({
+                error: false,
+                sessionid: sessionid,
+                user: jsonifyUser(user)
+              });
+            })
+          });
+        }
+      } catch (e) {
+        console.error('CATCH TO NOT BREAK REM', e);
       }
     });
   } else {
