@@ -12,6 +12,15 @@ var express = require('express')
   , rem = require('rem')
   , uuid = require('uuid');
 
+process.on('uncaughtException', function(err) {
+  console.error('Uncaught exception: ' + err);
+});
+
+
+/**
+ * App.
+ */
+
 var app = express(), db;
 
 app.configure(function () {
