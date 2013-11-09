@@ -79,6 +79,8 @@ style
       span(style="color: #3Ca") Clubs
     if self == 'apps'
       span(style="color: #C26") Apps
+    if self == 'alumni'
+      span(style="color: #A8D") Alumni
     | .com
 
   ul#olinstar
@@ -101,6 +103,11 @@ style
       li
         a(href="http://www.olinapps.com/") Olin
           span(style="color: #C26") Apps
+          | .com
+    if self != 'alumni'
+      li
+        a(href="http://www.olinalumni.org/") Olin
+          span(style="color: #A8D") Alumni
           | .com
     li
       a(href="http://www.olin.edu/") Olin
