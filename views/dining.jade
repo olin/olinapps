@@ -24,15 +24,16 @@ block content
     .row
       each mealname, meal in {'breakfast': 'Breakfast', 'lunch': 'Lunch', 'dinner': 'Dinner'}
         div.span2(style="width: 33%; margin: 0; box-sizing: border-box; padding: 0 20px")
-          h3= mealname
-          dl
-            each foods, section in day[meal]
-              dt 
-                b= section
-              dd
-                ul
-                  each item in foods
-                    li= item.name
+          if day[meal]
+            h3= mealname
+            dl
+              each foods, section in day[meal]
+                dt 
+                  b= section
+                dd
+                  ul
+                    each item in foods
+                      li= item.name
 
   script.
     $(function () {
