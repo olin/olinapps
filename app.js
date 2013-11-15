@@ -340,6 +340,7 @@ app.get('/api/me', function (req, res) {
 
 app.get('/api/sessionid', function (req, res) {
   getSessionUser(req, function (err, user) {
+    console.log('SESSIONID', err, user);
     if (err || !user) {
       res.json({error: true, message: 'Not logged in.'}, 404);
     } else {
@@ -348,8 +349,6 @@ app.get('/api/sessionid', function (req, res) {
   });
 });
 
-
-// TODO GET RID OF THIS DIRECT CALL
 function apiNetworkLogin (req, res) {
   if (req.body.username && req.body.password) {
     login(req.body.username, req.body.password, function (err, json) {
