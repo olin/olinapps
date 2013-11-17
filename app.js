@@ -36,7 +36,7 @@ app.configure(function () {
   app.use(express.cookieParser(app.get('secret')));
   app.use(express.session({
     secret: app.get('secret'),
-    cookie: { domain:'.olinapps.com'},
+    // cookie: { domain:'.olinapps.com'},
     store: new MongoStore({
       url: process.env.MONGOLAB_URI || 'mongodb://localhost/olinapps'
     })
