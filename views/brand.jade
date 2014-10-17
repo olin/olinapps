@@ -1,68 +1,67 @@
 // Olin* branding
 style
-  #brand { background: #333; margin: 0; padding: 0; height: 40px; border-bottom: 1px solid #fff; }
+  |#brand { background: #333; margin: 0; padding: 0; height: 40px; border-bottom: 1px solid #fff; }
 
-  #name { font-family: "PT Sans Narrow"; font-size: 18px; color: #ddd; letter-spacing: 1px; font-weight: bold; vertical-align: middle; }
-  #name img { margin-right: 8px; vertical-align: middle; margin-top: -2px }
-  #name { display: block; padding: 10px 15px 0 10px; float: left; height: 30px; }
-  #name:hover { background: #555; text-decoration: none; }
+  |#name { font-family: "PT Sans Narrow"; font-size: 18px; color: #ddd; letter-spacing: 1px; font-weight: bold; vertical-align: middle; }
+  |#name img { margin-right: 8px; vertical-align: middle; margin-top: -2px }
+  |#name { display: block; padding: 10px 15px 0 10px; float: left; height: 30px; }
+  |#name:hover { background: #555; text-decoration: none; }
 
-  #brand .state { margin: 8px 10px 0; color: #ddd; }
+  |#brand .state { margin: 8px 10px 0; color: #ddd; }
 
-  @media (max-width: 499px) {
-    #brand #name { display: none; }
-    #brand .state { text-align: center; display: block; }
-    #brand .state .desktop { display: none;} 
-  }
-  @media (min-width: 500px) {
-    #brand .state { float: right; }
-    #brand .state .antidesktop { display: none;} 
-  }
+  |@media (max-width: 499px) {
+  |  #brand #name { display: none; }
+  |  #brand .state { text-align: center; display: block; }
+  |  #brand .state .desktop { display: none;}
+  |}
+  |@media (min-width: 500px) {
+  |  #brand .state { float: right; }
+  |  #brand .state .antidesktop { display: none;}
+  |}
 
-  #olinstar, #olinstar li {
-    -webkit-backface-visibility: hidden;
-    -webkit-perspective: 1000;
-    z-index: 1000;
-    display: block;
-    list-style: none;
-    color: #ddd;
-    background: #333;
-    max-width: 180px;
-    margin: 0;
-  }
-  #olinstar {
-    margin-top: 40px;
-  }
-  #olinstar li a { display: block; padding: 5px 15px; cursor: pointer; color: #ddd; font-family: "PT Sans Narrow"; font-size: 16px; letter-spacing: 1px; font-weight: bold; }
-  #olinstar li a:hover { background: #555; text-decoration: none; }
-  #olinstar { display: none; }
-  #olinstar li a:hover:after { content: " \2192" }
+  |#olinstar, #olinstar li {
+  |  -webkit-backface-visibility: hidden;
+  |  -webkit-perspective: 1000;
+  |  z-index: 1000;
+  |  display: block;
+  |  list-style: none;
+  |  color: #ddd;
+  |  background: #333;
+  |  max-width: 180px;
+  |  margin: 0;
+  |}
+  |#olinstar {
+  |  margin-top: 40px;
+  |}
+  |#olinstar li a { display: block; padding: 5px 15px; cursor: pointer; color: #ddd; font-family: "PT Sans Narrow"; font-size: 16px; letter-spacing: 1px; |font-weight: bold; }
+  |#olinstar li a:hover { background: #555; text-decoration: none; }
+  |#olinstar { display: none; }
+  |#olinstar li a:hover:after { content: " \2192" }
 
-  #brand #name:hover + #olinstar, #olinstar:hover { display: block; }
-  /*
-  #brand #name:hover + #olinstar, #olinstar:hover {
-    -webkit-transition: 0s all;   
-    -moz-transition: 0 all;   
-    -ms-transition: 0 all;   
-    -o-transition: 0 all;   
-    transition: 0 all;
-  }
-  #olinstar {
-    -webkit-transition: 0.25s all;   
-    -moz-transition: 0.25s all;   
-    -ms-transition: 0.25s all;   
-    -o-transition: 0.25s all;   
-    transition: 0.25s all;
-  }
-  */
+  |#brand #name:hover + #olinstar, #olinstar:hover { display: block; }
+  |/*
+  |#brand #name:hover + #olinstar, #olinstar:hover {
+  |  -webkit-transition: 0s all;
+  |  -moz-transition: 0 all;
+  |  -ms-transition: 0 all;
+  |  -o-transition: 0 all;
+  |  transition: 0 all;
+  |}
+  |#olinstar {
+  |  -webkit-transition: 0.25s all;
+  |  -moz-transition: 0.25s all;
+  |  -ms-transition: 0.25s all;
+  |  -o-transition: 0.25s all;
+  |  transition: 0.25s all;
+  |}
+  |*/
 
 #brand.container-fluid
   span.state
     if user
       span.desktop Logged in as 
       code= user.id
-      span.desktop .
-      |   
+      span.desktop  
       a.btn.btn-danger.btn-mini(href="/logout") Logout
         span.antidesktop  of #{title}
     else
