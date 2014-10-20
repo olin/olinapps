@@ -6,8 +6,15 @@
 var express = require('express')
   , http = require('http')
   , path = require('path')
+  , logger = require('morgan')
+  , methodOverride = require('method-override')
+  , bodyParser = require('body-parser')
+  , cookieParser = require('cookie-parser')
+  , session = require('express-session')
+  , favicon = require('serve-favicon')
+  , errorHandler = require('errorhandler')
+  , MongoStore = require('connect-mongo')(session)
   , mongojs = require('mongojs')
-  , MongoStore = require('connect-mongo')(express)
   , olin = require('olin')
   , rem = require('rem')
   , uuid = require('uuid');
@@ -22,37 +29,39 @@ process.on('uncaughtException', function(err) {
  */
 
 var app = express(), db;
+var env = process.env.NODE_ENV || 'development';
 
-app.configure(function () {
-  db = mongojs(process.env.MONGOLAB_URI || 'olinapps', ['users']);
-  app.set('port', process.env.PORT || 3000);
-  app.set('views', __dirname + '/views');
-  app.set('view engine', 'jade');
-  app.set('secret', process.env.SESSION_SECRET || 'terrible, terrible secret')
-  app.use(express.favicon());
-  app.use(express.logger('dev'));
-  app.use(express.bodyParser());
-  app.use(express.methodOverride());
-  app.use(express.cookieParser(app.get('secret')));
-  app.use(express.session({
-    secret: app.get('secret'),
-    // cookie: { domain:'.olinapps.com'},
-    store: new MongoStore({
-      url: process.env.MONGOLAB_URI || 'mongodb://localhost/olinapps'
-    })
-  }));
-  app.use(app.router);
-  app.use(express.static(path.join(__dirname, 'public')));
-});
+db = mongojs(process.env.MONGOLAB_URI || 'olinapps', ['users']);
+app.set('port', process.env.PORT || 3000);
+app.set('views', __dirname + '/views');
+app.set('view engine', 'jade');
+app.set('secret', process.env.SESSION_SECRET || 'terrible, terrible secret')
+// app.use(favicon());
+app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(methodOverride());
+app.use(cookieParser(app.get('secret')));
+app.use(session({
+  resave: true,
+  saveUninitialized: true,
+  secret: app.get('secret'),
+  // cookie: { domain:'.olinapps.com'},
+  store: new MongoStore({
+    url: process.env.MONGOLAB_URI || 'mongodb://localhost/olinapps'
+  })
+}));
 
-app.configure('development', function () {
+app.use(express.static(path.join(__dirname, 'public')));
+
+if (env == 'development'){
   app.set('host', 'localhost:' + app.get('port'));
-  app.use(express.errorHandler());
-});
+  app.use(errorHandler());  
+};
 
-app.configure('production', function () {
+if (env == 'production'){
   app.set('host', 'www.olinapps.com');
-});
+};
 
 
 /**

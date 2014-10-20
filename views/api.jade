@@ -2,99 +2,97 @@ extends layout
 block content
   h2 Authentication API
   p
-    | Users on Olin Apps are uniquely identified by the local part of their email address. For example,
+    | Users on Olin Apps are uniquely identified by the local part of their email address. For example, 
     code president.miller@students.olin.edu
-    | would be uniquely identified as
+    |  would be uniquely identified as 
     code president.miller
-    | . This is given as the
+    | . This is given as the 
     code "id"
-    | parameter in the authentications below.
+    |  parameter in the authentications below.
   p
     | To authenticate users on Olin Apps requires a unique session key. There are two ways to do this:
-  ol(type='a')
+  ol(type='A')
     li
       p
-        b Web apps:
-        | Redirect the user to
-      pre.
-        
+        b Web apps: 
+      | Redirect the user to
+      pre http://www.olinapps.com/external?callback=<i>http://example.com/</i>
       p
-        | If the user approves the app, they are returned to the callback URL with a
+        | If the user approves the app, they are returned to the callback URL with a 
         code POST
-        | request; its form value
+        |  request; its form value 
         code sessionid
-        | will be a unique session key that can be used to acess the API. Save this and access
+        |  will be a unique session key that can be used to acess the API. Save this and access 
         code /api/me
-        | (see below) to find out the user's identiy. If the user rejects the app, they are sent back to the callback URL via a
+        |  (see below) to find out the user's identiy. If the user rejects the app, they are sent back to the callback URL via a 
         code GET
-        | request with no sessionid.
+        |  request with no sessionid.
     li
       p
-        b Native/mobile apps:
-        | Send a POST request to
-      pre.
-        
+        b Native/mobile apps: 
+      | Send a POST request to
+      pre https://olinapps.herokuapp.com/api/networklogin
       p
-        | Include the form values
+        | Include the form values 
         code username
-        | and
+        |  and 
         code password
-        | containing the user's network credentials (don't include the
+        |  containing the user's network credentials (don't include the 
         code MILKYWAY\
         | ). The server will respond with an error code of 401 if invalid, or 200 and a JSON body:
-      pre.
-        \n{
-              "sessionid": "          ",
-              "user": {
-                "created": 1384484848483,
-                "id": "first.last",
-                "domain": "          .olin.edu"
-              }
-            }          
+      pre
+        |{
+        |    "sessionid": "          ",
+        |    "user": {
+        |       "created": 1384484848483,
+        |       "id": "first.last",
+        |       "domain": "          .olin.edu"
+        |    }
+        |}
       p
-        | The
+        | The 
         code "id"
-        | field is the unique identifier for this user, i.e. you should use this string to associate information with a unique student or faculty. The
+        |  field is the unique identifier for this user, i.e. you should use this string to associate information with a unique student or faculty. The 
         code "created"
-        | field is the time the account was created.
+        |  field is the time the account was created.
   h3 User and Session Information
   p Once authenticated, you can send a GET request from your server to
-  pre.
-    
+  pre http://www.olinapps.com/api/me?sessionid=<i>&lt;unique-session-key&gt;</i>
   p
     | This returns the user's information in JSON, and also checks that your session key is still valid. If the session key has become invalid (for example, the user has logged out) this method returns an error code of 401.
     p
       em
-        | Once authenticated, you can use other Olin Apps APIs such as the
+        | Once authenticated, you can use other Olin Apps APIs such as the 
         a(href='http://directory.olinapps.com/api') Directory API
         | .
     h3 Testing
     p
-      | First install
+      | First install 
       a(href='https://github.com/jkbr/httpie') httpie
-      | . Run the following command to obtain a
+      | . Run the following command to obtain a 
       code sessionid
       | :
-    pre.
-      \nhttp -fv POST https://olinapps.herokuapp.com/api/networklogin username=<i>&lt;your username&gt; password=&lt;your password&gt;
+    pre
+      http -fv POST https://olinapps.herokuapp.com/api/networklogin username=<i>&lt;your username&gt;</i> password=<i>&lt;your password&gt;</i>
     p Then attempt to access a protected resource:
-    pre.
-      http GET http://olinapps.com/api/me sessionid==&lt;sessionid string&gt;
-      http GET http://olinapps.com/api/people sessionid==&lt;sessionid string&gt;
-      http GET http://olinapps.com/api/sessionid sessionid==&lt;sessionid string&gt;
+    pre
+      | http GET http://olinapps.com/api/me sessionid==<i>&lt;sessionid string&gt;</i>
+      | http GET http://olinapps.com/api/people sessionid==<i>&lt;sessionid string&gt;</i>
+      | http GET http://olinapps.com/api/sessionid sessionid==<i>&lt;sessionid string&gt;</i>
     h2 Directory API
     p
       | The directory API provides pictures and individual information to authenticated users.
     ol
       li  Authenticate using the above Authentication API.
       li
-        | Include ?sessionid=
-        unique-session-ey  onto each URL call below.
+        | Include 
+        code ?sessionid=unique-session-key
+        |  onto each URL call below.
     p
-      b Authenticated account:
+      b Authenticated account: 
       code
         a(href='http://directory.olinapps.com/api/me') http://directory.olinapps.com/api/me
     p
-      b List all people:
+      b List all people: 
       code
         a(href='http://directory.olinapps.com/api/people') http://directory.olinapps.com/api/people
