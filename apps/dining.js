@@ -17,31 +17,18 @@ var self = require('../app')
 var daynames = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
 function getMenuStream (next) {
-  var dif, d = new Date(); // Today's date 
-  dif = (d.getDay() + 6) % 7; // Number of days to subtract 
-  d = new Date(d - dif * 24*60*60*1000); // Do the subtraction 
-  var dstr = (d.getMonth() + 1) + '/' + ('00' + d.getDate()).substr(-2);
 
-  rem.stream('http://olindining.com/').get().pipe(skim({
+  rem.stream('https://olindining.sodexomyway.com/dining-choices/index.html').get().pipe(skim({
     'links': {
-      $query: '#front',
-      $value: '(html)'
+      $query: 'ul li a',
+      $value: '(attr href)'
     }
   }, function (a) {
     try {
-      next(a.links.match(new RegExp('href=\"(.*?)\">.*?' + dstr))[1]);
+      next(a.links);
     } catch (e) {
       console.error('UNSUCCESSFUL PARSING OF DINING MENU', e);
     }
-    // var L = null;
-    // console.log(a.links);
-    // a.links.forEach(function (l) {
-    //   // console.log(l.str, dstr)
-    //   if (l.str.indexOf(dstr) > -1 && l.str.indexOf('Week of') > -1) {
-    //     L = l;
-    //   }
-    // });
-    // next(L.href);
   }));
 }
 
@@ -53,7 +40,7 @@ getMenuStream(function (href) {
     return;
   }
 
-  rem.stream('http://olindining.com/' + href).get().pipe(skim({
+  rem.stream('https://olindining.sodexomyway.com/' + href).get().pipe(skim({
     'breakfast': {
       $query: '.brk',
       $each: '(text)'
@@ -137,7 +124,7 @@ getMenuStream(function (href) {
         var lunch = parse(res.lunch);
         var dinner = parse(res.dinner);
 
-        for (var i = 0; i < breakfast.length; i++) {
+        for (var i = 0; i < lunch.length; i++) {
           meals.push({
             dayname: daynames[i],
             breakfast: breakfast[i],
