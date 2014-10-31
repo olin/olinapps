@@ -124,7 +124,7 @@ getMenuStream(function (href) {
         var lunch = parse(res.lunch);
         var dinner = parse(res.dinner);
 
-        for (var i = 0; i < breakfast.length; i++) {
+        for (var i = 0; i < lunch.length; i++) {
           meals.push({
             dayname: daynames[i],
             breakfast: breakfast[i],
