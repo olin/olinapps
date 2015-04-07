@@ -239,19 +239,6 @@ app.post('/login', function (req, res) {
   if (req.body.username && req.body.password) {
     try {
       login(req.body.username, req.body.password, function (err, json) {
-        // // Noah Tye, Class of Never
-        // if ((err || json.error) && req.body.username == 'ntye') {
-        //   json = { email: 'noah.tye@students.olin.edu', error: false }; err = null;
-        // }
-        // // Rachel Fox, transfer
-        // if ((err || json.error) && req.body.username == 'rfox') {
-        //   json = { email: 'rachel.fox@students.olin.edu', error: false }; err = null;
-        // }
-        // // Gabriel Villenave, professional cheese taster
-        // if ((err || json.error) && req.body.username == 'gvillenave') {
-        //   json = { email: 'gabriel.villenave@students.olin.edu', error: false }; err = null;
-        // }
-
         if (err || json.error) {
           res.render('login.jade', {
             title: 'Olin Apps',
@@ -284,28 +271,6 @@ app.post('/login', function (req, res) {
         user: null
       });
     }
-
-    // olin.networkLogin(req.body.username, req.body.password, function (err, json) {
-    //   if (!json || !json.mailbox || !json.mailbox.emailAddress) {
-    //     res.render('login.jade', {
-    //       external: req.query.external,
-    //       domain: req.query.external && require('url').parse(req.query.external).hostname,
-    //       message: 'Your credentials were invalid. Please try again.'
-    //     });
-    //   } else {
-    //     var email = json.mailbox.emailAddress.toLowerCase();
-    //     ensureUser(email, function (err, user) {
-    //       generateSession(req, user, function (err, sessionid) {
-    //         // Finished logging in, now redirect back to non HTTPS domain.
-    //         if (req.query.external) {
-    //           res.redirect('http://olinapps.com/login?sessionid=' + sessionid + '&external=' + req.query.external);
-    //         } else {
-    //           res.redirect('http://olinapps.com/login?sessionid=' + sessionid);
-    //         }
-    //       })
-    //     });
-    //   }
-    // });
   } else {
     res.render('login.jade', {
       title: 'Olin Apps',
