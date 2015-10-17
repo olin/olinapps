@@ -20,7 +20,7 @@
     "express-session": "~1.9.0",
     "jade": "~1.7.0",
     "method-override": "~2.3.0",
-    "mongojs": "~0.6.2",
+    "mongojs": "^1.4.1",
     "morgan": "~1.4.0",
     "olin": "~0.1.0",
     "olinapps": "~0.1.2",
