@@ -31,7 +31,7 @@ process.on('uncaughtException', function(err) {
 var app = express(), db;
 var env = process.env.NODE_ENV || 'development';
 
-db = mongojs(process.env.MONGOLAB_URI || 'olinapps', ['users']);
+db = mongojs(process.env.MONGOLAB_URI || 'olinapps', ['users'], {authMechanism: 'ScramSHA1'});
 app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
