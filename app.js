@@ -6,7 +6,7 @@
 var express = require('express')
   , http = require('http')
   , path = require('path')
-  , logger = require('morgan')
+  , morgan = require('morgan')
   , methodOverride = require('method-override')
   , bodyParser = require('body-parser')
   , cookieParser = require('cookie-parser')
@@ -17,12 +17,45 @@ var express = require('express')
   , mongojs = require('mongojs')
   , olin = require('olin')
   , rem = require('rem')
+  , winston = require('winston')
+  , fs = require('fs')
   , uuid = require('uuid');
 
-process.on('uncaughtException', function(err) {
-  console.error('Uncaught exception: ' + err);
+var logDir = './logs';
+
+fs.mkdir(logDir, function(err){
+  if (err.code !== "EEXIST") {
+    throw err;
+  }
 });
 
+var logger = new winston.Logger({
+    transports: [
+        new winston.transports.File({
+            level: 'info',
+            filename: logDir + '/access.log',
+            handleExceptions: true,
+            humanReadableUnhandledException: true,
+            json: true,
+            maxsize: 5242880, //5MB
+            maxFiles: 5,
+            colorize: false
+        }),
+        new winston.transports.Console({
+            level: 'debug',
+            handleExceptions: true,
+            json: false,
+            colorize: true
+        })
+    ],
+    exitOnError: false
+});
+
+var stream = {
+    write: function(message, encoding){
+        logger.info(message);
+    }
+};
 
 /**
  * App.
@@ -37,7 +70,7 @@ app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
 app.set('secret', process.env.SESSION_SECRET || 'terrible, terrible secret')
 // app.use(favicon());
-app.use(logger('dev'));
+app.use(morgan('tiny', {stream: stream}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(methodOverride());
@@ -56,7 +89,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 if (env == 'development'){
   app.set('host', 'localhost:' + app.get('port'));
-  app.use(errorHandler());  
+  app.use(errorHandler());
 };
 
 if (env == 'production'){
